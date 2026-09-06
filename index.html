@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mango Labz - Wiki & Repozytoria</title>
-  <!-- Parser Markdown z CDN -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
@@ -15,47 +14,38 @@
       --bg-card-hover: rgba(35, 50, 75, 0.75);
       --border: rgba(255, 255, 255, 0.08);
       --border-accent: rgba(255, 140, 0, 0.3);
-      
       --accent-yellow: #FFE033;
       --accent-orange: #FF8C00;
       --accent-red: #E63900;
       --accent-green: #57D638;
-      
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
-      
-      --font-code: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      --font-code: "JetBrains Mono", Consolas, monospace;
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
       background-color: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       line-height: 1.6;
-      overflow-x: hidden;
       background-image: 
         radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 140, 0, 0.15), transparent 70%),
-        radial-gradient(circle 400px at 85% 20%, rgba(230, 57, 0, 0.08), transparent),
-        radial-gradient(circle 350px at 15% 70%, rgba(255, 224, 51, 0.05), transparent);
+        radial-gradient(circle 400px at 85% 20%, rgba(230, 57, 0, 0.08), transparent);
       background-attachment: fixed;
     }
 
     /* Pasek nawigacji */
     header {
-      background: rgba(10, 14, 23, 0.85);
+      background: rgba(10, 14, 23, 0.9);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
@@ -71,6 +61,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
     }
 
     .brand {
@@ -81,27 +72,24 @@
       font-weight: 800;
       color: var(--text-main);
       text-decoration: none;
-      letter-spacing: -0.02em;
     }
 
-    .brand-logo-mini {
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      filter: drop-shadow(0 2px 8px rgba(255, 140, 0, 0.4));
-    }
-
-    .brand-logo-mini svg {
-      width: 100%;
-      height: 100%;
-    }
-
+    .brand-logo-mini { width: 34px; height: 34px; }
+    .brand-logo-mini svg { width: 100%; height: 100%; }
     .brand-text span {
-      background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-orange) 50%, var(--accent-red) 100%);
+      background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-orange) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.7rem;
+      cursor: pointer;
+      padding: 0.2rem;
     }
 
     .nav-actions {
@@ -128,22 +116,14 @@
       cursor: pointer;
       font-weight: 600;
       font-size: 0.92rem;
-      transition: all 0.25s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+      transition: all 0.25s;
     }
 
-    .tab-btn:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
+    .tab-btn:hover { color: var(--text-main); }
     .tab-btn.active {
       background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(230, 57, 0, 0.25));
       color: #ffb74d;
       border: 1px solid rgba(255, 140, 0, 0.4);
-      box-shadow: 0 4px 15px rgba(255, 140, 0, 0.15);
     }
 
     .github-link-btn {
@@ -158,13 +138,28 @@
       font-size: 0.88rem;
       font-weight: 600;
       text-decoration: none;
-      transition: all 0.2s;
     }
 
-    .github-link-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-1px);
+    /* RWD dla menu nawigacyjnego */
+    @media (max-width: 768px) {
+      .hamburger-btn { display: block; }
+      .nav-actions {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(13, 19, 31, 0.98);
+        border-bottom: 1px solid var(--border);
+        padding: 1.25rem;
+        gap: 1rem;
+        box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+      }
+      .nav-actions.open { display: flex; }
+      .tabs { flex-direction: column; width: 100%; }
+      .tab-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; }
+      .github-link-btn { width: 100%; justify-content: center; }
     }
 
     main {
@@ -175,34 +170,19 @@
       flex: 1;
     }
 
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.3s ease forwards;
-    }
+    .tab-content { display: none; animation: fadeIn 0.3s ease forwards; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .tab-content.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ========================================================
-       SEKCJA GŁÓWNA & ROTATOR (MANGO LABZ)
-       ======================================================== */
+    /* Sekcja Główna */
     .hero-section {
-      position: relative;
       padding: 2.5rem 1.5rem 4rem;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
     }
 
-    /* Klikalny badge nad grafiką */
     .project-display-badge {
       display: inline-flex;
       align-items: center;
@@ -212,53 +192,29 @@
       border: 1px solid rgba(255, 140, 0, 0.35);
       border-radius: 999px;
       margin-bottom: 2rem;
-      box-shadow: 0 0 20px rgba(255, 140, 0, 0.15);
-      backdrop-filter: blur(8px);
       text-decoration: none;
-      transition: all 0.2s ease;
       cursor: pointer;
     }
 
-    .project-display-badge:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255, 140, 0, 0.6);
-      box-shadow: 0 0 25px rgba(255, 140, 0, 0.3);
-    }
-
     .pulse-dot {
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       background: var(--accent-green);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--accent-green);
-      animation: pulse 2s infinite;
     }
 
     .project-tag {
       font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
       background: rgba(255, 255, 255, 0.08);
       padding: 0.2rem 0.55rem;
       border-radius: 4px;
       color: #94a3b8;
     }
 
-    .project-name-text {
-      color: #ff9800;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
+    .project-name-text { color: #ff9800; font-size: 1rem; font-weight: 700; }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.7; }
-    }
-
-    /* Karuzela ze slajdami */
     .carousel-container {
       position: relative;
       width: 270px;
@@ -271,221 +227,65 @@
 
     .hero-logo-glow {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(255, 140, 0, 0.32) 0%, rgba(230, 57, 0, 0.12) 55%, transparent 75%);
-      border-radius: 50%;
-      filter: blur(32px);
-      z-index: 0;
-      animation: glowScale 4s ease-in-out infinite alternate;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle, rgba(255, 140, 0, 0.32) 0%, transparent 70%);
+      filter: blur(30px);
     }
 
     .svg-slide {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       opacity: 0;
-      transform: scale(0.92) translateY(8px);
-      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(0.92);
+      transition: opacity 0.5s ease, transform 0.5s ease;
       pointer-events: none;
-      z-index: 1;
-      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.6));
-      display: block;
-      text-decoration: none;
-    }
-
-    .svg-slide.active {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      pointer-events: auto;
-      z-index: 2;
       cursor: pointer;
     }
 
-    .svg-slide svg {
-      width: 100%;
-      height: 100%;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+    .svg-slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+    .svg-slide svg { width: 100%; height: 100%; }
 
-    .svg-slide:hover svg {
-      transform: scale(1.06) rotate(1deg);
-    }
+    .carousel-indicators { display: flex; gap: 0.5rem; margin-bottom: 2.2rem; }
+    .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); cursor: pointer; }
+    .carousel-dot.active { width: 22px; border-radius: 999px; background: #ff9800; }
 
-    @keyframes glowScale {
-      0% { transform: scale(0.9); opacity: 0.7; }
-      100% { transform: scale(1.25); opacity: 1; }
-    }
-
-    /* Kropki kontrolne */
-    .carousel-indicators {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 2.2rem;
-      z-index: 5;
-    }
-
-    .carousel-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .carousel-dot.active {
-      width: 22px;
-      border-radius: 999px;
-      background: #ff9800;
-      box-shadow: 0 0 10px rgba(255, 152, 0, 0.6);
-    }
-
-    /* Typografia nagłówka */
     .hero-title {
-      font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+      font-size: clamp(2.4rem, 5vw, 4rem);
       font-weight: 900;
-      letter-spacing: -0.03em;
       line-height: 1.1;
       margin-bottom: 0.85rem;
     }
-
-    .hero-title .main-brand {
-      color: #ffffff;
-      display: block;
-    }
-
-    .hero-title .highlight-text {
-      color: #ff9800;
-      display: block;
-    }
+    .hero-title .main-brand { color: #ffffff; display: block; }
+    .hero-title .highlight-text { color: #ff9800; display: block; }
 
     .hero-desc {
-      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      font-size: 1.1rem;
       color: var(--text-muted);
       max-width: 720px;
       margin-bottom: 2.5rem;
-      line-height: 1.6;
     }
 
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.2rem;
-    }
-
+    .hero-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
       background: linear-gradient(135deg, #ff9800 0%, #e65100 100%);
       color: #fff;
       font-weight: 700;
-      font-size: 1rem;
-      padding: 0.9rem 2rem;
+      padding: 0.85rem 1.85rem;
       border-radius: var(--radius-md);
-      text-decoration: none;
       border: none;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(230, 81, 0, 0.4);
-      transition: all 0.25s ease;
     }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(230, 81, 0, 0.55);
-      background: linear-gradient(135deg, #ffa726 0%, #ef6c00 100%);
-    }
-
     .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
       background: rgba(25, 33, 48, 0.85);
       color: var(--text-main);
       font-weight: 600;
-      font-size: 1rem;
-      padding: 0.9rem 2rem;
+      padding: 0.85rem 1.85rem;
       border-radius: var(--radius-md);
-      text-decoration: none;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: all 0.25s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(35, 45, 65, 0.95);
-      border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
-    }
-
-    /* Kafelki z cechami */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin-top: 4rem;
-    }
-
-    .feature-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      cursor: pointer;
     }
 
-    .feature-card:hover {
-      background: var(--bg-card-hover);
-      transform: translateY(-4px);
-      border-color: var(--border-accent);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
-    }
-
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 140, 0, 0.12);
-      border: 1px solid rgba(255, 140, 0, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .feature-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.6rem;
-      color: var(--text-main);
-    }
-
-    .feature-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.55;
-    }
-
-    /* ========================================================
-       WIKI & MARKDOWN VIEW
-       ======================================================== */
-    .wiki-header {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-    }
-
+    /* Układ Wiki z repozytoriami i podfolderami */
     .wiki-layout {
       display: grid;
       grid-template-columns: 290px 1fr;
@@ -494,530 +294,200 @@
     }
 
     @media (max-width: 860px) {
-      .wiki-layout {
-        grid-template-columns: 1fr;
-      }
+      .wiki-layout { grid-template-columns: 1fr; }
     }
 
     .wiki-sidebar {
       background: var(--bg-surface);
-      backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 1.25rem;
       height: fit-content;
-      position: sticky;
-      top: 5rem;
     }
 
-    .wiki-sidebar h3 {
-      font-size: 0.8rem;
+    .wiki-group { margin-bottom: 1.5rem; }
+    .wiki-group-title {
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--text-dim);
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .wiki-list {
-      list-style: none;
+      color: #ff9800;
+      margin-bottom: 0.5rem;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 0.4rem;
     }
 
+    .wiki-list { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
     .wiki-item-btn {
       width: 100%;
       text-align: left;
       background: none;
-      border: 1px solid transparent;
-      padding: 0.65rem 0.85rem;
+      border: none;
+      padding: 0.5rem 0.75rem;
       border-radius: var(--radius-sm);
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 0.92rem;
-      font-weight: 500;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
+      font-size: 0.9rem;
     }
-
-    .wiki-item-btn:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-main);
-    }
-
-    .wiki-item-btn.active {
-      background: rgba(255, 140, 0, 0.12);
-      color: #ffb74d;
-      border-color: rgba(255, 140, 0, 0.3);
-      font-weight: 600;
-    }
-
-    .wiki-item-btn::before {
-      content: "📄";
-      font-size: 0.85em;
-      opacity: 0.7;
-    }
+    .wiki-item-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+    .wiki-item-btn.active { background: rgba(255, 140, 0, 0.15); color: #ffb74d; font-weight: 600; }
 
     .markdown-body {
       background: var(--bg-surface);
-      backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 2.75rem;
+      padding: 2.5rem;
       line-height: 1.7;
-      min-height: 500px;
     }
+    .markdown-body h1 { color: #ff9800; margin-bottom: 1rem; }
+    .markdown-body code { background: rgba(0,0,0,0.4); padding: 0.2rem 0.4rem; border-radius: 4px; color: #ffb74d; }
+    .markdown-body pre { background: #080c14; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
 
-    .markdown-body h1 {
-      font-size: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.6rem;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #ffffff 40%, #ffb74d 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .markdown-body h2 {
-      font-size: 1.45rem;
-      color: #ffd180;
-      margin-top: 1.8rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .markdown-body p {
-      margin-bottom: 1.2rem;
-      color: #cbd5e1;
-    }
-
-    .markdown-body code {
-      font-family: var(--font-code);
-      background: rgba(0, 0, 0, 0.35);
-      padding: 0.2rem 0.45rem;
-      border-radius: 5px;
-      font-size: 0.88em;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffd180;
-    }
-
-    .markdown-body pre {
-      background: #0d121c;
-      padding: 1.25rem;
-      border-radius: var(--radius-md);
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      margin: 1.2rem 0;
-    }
-
-    .markdown-body pre code {
-      background: none;
-      padding: 0;
-      border: none;
-      color: #e2e8f0;
-    }
-
-    .markdown-body blockquote {
-      border-left: 4px solid var(--accent-orange);
-      background: rgba(255, 140, 0, 0.05);
-      padding: 1rem 1.25rem;
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      color: var(--text-muted);
-      margin: 1.2rem 0;
-    }
-
-    /* ========================================================
-       REPOZYTORIA
-       ======================================================== */
-    .repos-header {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-    }
-
-    .repo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1.5rem;
-    }
-
+    /* Repozytoria */
+    .repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
     .repo-card {
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.25s ease;
     }
-
-    .repo-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--border-accent);
-      background: var(--bg-card-hover);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-    }
-
-    .repo-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.6rem;
-    }
-
-    .repo-title a {
-      color: #ffb74d;
-      text-decoration: none;
-    }
-
-    .repo-title a:hover {
-      text-decoration: underline;
-    }
-
-    .repo-desc {
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
-      flex-grow: 1;
-    }
-
-    .repo-meta {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      padding-top: 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .status-msg {
-      color: var(--text-muted);
-      font-style: italic;
-      padding: 2rem;
-      text-align: center;
-    }
+    .repo-card a { color: #ffb74d; text-decoration: none; font-weight: 700; font-size: 1.15rem; }
   </style>
 </head>
 <body>
 
-  <!-- NAWIGACJA GÓRNA -->
   <header>
     <div class="nav-container">
       <a href="#" class="brand" onclick="switchTab('home'); return false;">
         <div class="brand-logo-mini">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <svg viewBox="0 0 512 512">
             <defs>
-              <linearGradient id="mangoGradNav" x1="20%" y1="10%" x2="80%" y2="90%">
-                <stop offset="0%" stop-color="#FFE033"/>
-                <stop offset="35%" stop-color="#FF8C00"/>
-                <stop offset="100%" stop-color="#E63900"/>
-              </linearGradient>
-              <linearGradient id="leafGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#57D638"/>
-                <stop offset="100%" stop-color="#1E6E12"/>
-              </linearGradient>
+              <linearGradient id="mangoNav" x1="20%" y1="10%" x2="80%" y2="90%"><stop offset="0%" stop-color="#FFE033"/><stop offset="100%" stop-color="#E63900"/></linearGradient>
             </defs>
-            <g>
-              <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-              <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGradNav)"/>
-              <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGradNav)"/>
-              <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
-            </g>
+            <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 Z" fill="#4A2A0C"/>
+            <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoNav)"/>
           </svg>
         </div>
         <div class="brand-text">Mango <span>Labz</span></div>
       </a>
 
-      <div class="nav-actions">
+      <!-- Przycisk menu dla urządzeń mobilnych -->
+      <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">☰</button>
+
+      <div class="nav-actions" id="nav-actions">
         <nav class="tabs">
           <button class="tab-btn active" id="btn-tab-home" onclick="switchTab('home')">🏠 Główna</button>
           <button class="tab-btn" id="btn-tab-wiki" onclick="switchTab('wiki')">📚 Wiki</button>
           <button class="tab-btn" id="btn-tab-repos" onclick="switchTab('repos')">📦 Repozytoria</button>
         </nav>
-
-        <a href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer" class="github-link-btn">
-          <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-          </svg>
-          GitHub
-        </a>
+        <a href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer" class="github-link-btn">GitHub</a>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- ========================================================
-         SEKCJA 1: STRONA GŁÓWNA (MANGO LABZ)
-         ======================================================== -->
+    <!-- GŁÓWNA -->
     <section id="tab-home" class="tab-content active">
       <div class="hero-section">
-        
-        <!-- Klikalny badge nad grafiką przenoszący do repozytorium -->
-        <a id="project-badge-link" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer" class="project-display-badge" title="Kliknij, aby otworzyć repozytorium">
+        <a id="project-badge-link" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer" class="project-display-badge">
           <span class="pulse-dot"></span>
           <span class="project-tag">Projekt</span>
           <span class="project-name-text" id="project-title">Mango-Convert</span>
         </a>
 
-        <!-- Karuzela klikalnych logo SVG przenoszących do repozytorium -->
         <div class="carousel-container">
           <div class="hero-logo-glow"></div>
 
-          <!-- 1. Mango-Convert -->
-          <a class="svg-slide active" data-index="0" data-name="Mango-Convert" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer" title="Otwórz repozytorium Mango-Convert">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <!-- Slide 1: Mango-Convert -->
+          <a class="svg-slide active" data-index="0" data-name="Mango-Convert" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 512 512">
               <defs>
-                <linearGradient id="mangoGrad1" x1="20%" y1="10%" x2="80%" y2="90%">
-                  <stop offset="0%" stop-color="#FFE033"/>
-                  <stop offset="35%" stop-color="#FF8C00"/>
-                  <stop offset="100%" stop-color="#E63900"/>
-                </linearGradient>
-                <linearGradient id="leafGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#57D638"/>
-                  <stop offset="100%" stop-color="#1E6E12"/>
-                </linearGradient>
-                <linearGradient id="arrowGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#FFE033"/>
-                  <stop offset="100%" stop-color="#FF8C00"/>
-                </linearGradient>
-                <filter id="shadow1" x="-10%" y="-10%" width="130%" height="130%">
-                  <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
-                </filter>
+                <linearGradient id="mg1" x1="20%" y1="10%" x2="80%" y2="90%"><stop offset="0%" stop-color="#FFE033"/><stop offset="100%" stop-color="#E63900"/></linearGradient>
+                <linearGradient id="lf1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#57D638"/><stop offset="100%" stop-color="#1E6E12"/></linearGradient>
               </defs>
-              <g filter="url(#shadow1)">
+              <g>
                 <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad1)"/>
-                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad1)"/>
-
-                <g id="converter-symbol">
-                  <circle cx="257" cy="290" r="72" fill="#1a1a1a" stroke="#333333" stroke-width="4"/>
-                  <circle cx="257" cy="290" r="58" fill="#111111" stroke="#444444" stroke-width="1.5"/>
-                  <g transform="translate(257, 290)">
-                    <path d="M -32 -14 L 18 -14 L 10 -24 L 35 -6 L 10 12 L 18 2 L -32 2 Z" fill="url(#arrowGrad1)" />
-                    <path d="M 32 14 L -18 14 L -10 24 L -35 6 L -10 -12 L -18 -2 L 32 -2 Z" fill="#57D638" />
-                  </g>
+                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#lf1)"/>
+                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mg1)"/>
+                <circle cx="257" cy="290" r="72" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
+                <g transform="translate(257, 290)">
+                  <path d="M -32 -14 L 18 -14 L 10 -24 L 35 -6 L 10 12 L 18 2 L -32 2 Z" fill="#FF8C00" />
+                  <path d="M 32 14 L -18 14 L -10 24 L -35 6 L -10 -12 L -18 -2 L 32 -2 Z" fill="#57D638" />
                 </g>
-
-                <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
               </g>
             </svg>
           </a>
 
-          <!-- 2. Mango-Cam -->
-          <a class="svg-slide" data-index="1" data-name="Mango-Cam" href="https://github.com/open-mangos/Mango-Cam" target="_blank" rel="noopener noreferrer" title="Otwórz repozytorium Mango-Cam">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <defs>
-                <linearGradient id="mangoGrad2" x1="20%" y1="10%" x2="80%" y2="90%">
-                  <stop offset="0%" stop-color="#FFE033"/>
-                  <stop offset="35%" stop-color="#FF8C00"/>
-                  <stop offset="100%" stop-color="#E63900"/>
-                </linearGradient>
-                <linearGradient id="leafGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#57D638"/>
-                  <stop offset="100%" stop-color="#1E6E12"/>
-                </linearGradient>
-                <filter id="shadow2" x="-10%" y="-10%" width="130%" height="130%">
-                  <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
-                </filter>
-                <linearGradient id="lensReflect" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#4a90e2" stop-opacity="0.6"/>
-                  <stop offset="100%" stop-color="#000000" stop-opacity="0.9"/>
-                </linearGradient>
-              </defs>
-              <g filter="url(#shadow2)">
+          <!-- Slide 2: Mango-Cam -->
+          <a class="svg-slide" data-index="1" data-name="Mango-Cam" href="https://github.com/open-mangos/Mango-Cam" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 512 512">
+              <g>
                 <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad2)"/>
-                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad2)"/>
-                
-                <g id="camera-lens">
-                  <circle cx="257" cy="290" r="75" fill="#1a1a1a" stroke="#333333" stroke-width="4"/>
-                  <circle cx="257" cy="290" r="60" fill="#0d0d0d" stroke="#555555" stroke-width="1"/>
-                  <circle cx="257" cy="290" r="48" fill="url(#lensReflect)"/>
-                  <circle cx="257" cy="290" r="22" fill="#000000"/>
-                  <circle cx="230" cy="265" r="14" fill="#ffffff" opacity="0.6"/>
-                  <circle cx="242" cy="253" r="5" fill="#ffffff" opacity="0.8"/>
-                  <ellipse cx="282" cy="315" rx="12" ry="4" fill="#ffffff" opacity="0.2" transform="rotate(-30 282 315)"/>
-                </g>
-
-                <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
+                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#lf1)"/>
+                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mg1)"/>
+                <circle cx="257" cy="290" r="75" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
+                <circle cx="257" cy="290" r="48" fill="#1e3a5f"/>
+                <circle cx="257" cy="290" r="22" fill="#000"/>
+                <circle cx="230" cy="265" r="12" fill="#ffffff" opacity="0.6"/>
               </g>
             </svg>
           </a>
 
-          <!-- 3. Mango Labz Core -->
-          <a class="svg-slide" data-index="2" data-name="Mango Labz Core" href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer" title="Otwórz organizację Mango Labz">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <defs>
-                <linearGradient id="mangoGrad3" x1="20%" y1="10%" x2="80%" y2="90%">
-                  <stop offset="0%" stop-color="#FFE033"/>
-                  <stop offset="35%" stop-color="#FF8C00"/>
-                  <stop offset="100%" stop-color="#E63900"/>
-                </linearGradient>
-                <linearGradient id="leafGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#57D638"/>
-                  <stop offset="100%" stop-color="#1E6E12"/>
-                </linearGradient>
-                <filter id="shadow3" x="-10%" y="-10%" width="130%" height="130%">
-                  <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
-                </filter>
-              </defs>
-              <g filter="url(#shadow3)">
+          <!-- Slide 3: Mango Labz Core -->
+          <a class="svg-slide" data-index="2" data-name="Mango Labz Core" href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 512 512">
+              <g>
                 <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad3)"/>
-                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad3)"/>
-                <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
+                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#lf1)"/>
+                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mg1)"/>
               </g>
             </svg>
           </a>
         </div>
 
-        <!-- Kropki kontrolne -->
         <div class="carousel-indicators">
           <div class="carousel-dot active" onclick="setSlide(0)"></div>
           <div class="carousel-dot" onclick="setSlide(1)"></div>
           <div class="carousel-dot" onclick="setSlide(2)"></div>
         </div>
 
-        <!-- Napisy -->
         <h1 class="hero-title">
           <span class="main-brand">Mango Labz</span>
           <span class="highlight-text">Otwórz sie na nas!</span>
         </h1>
 
-        <p class="hero-desc">
-          Open-Source projekty które pomogą ci w tym cyfrowym świecie.
-        </p>
+        <p class="hero-desc">Open-Source projekty które pomogą ci w tym cyfrowym świecie.</p>
 
-        <!-- Przyciski akcji -->
         <div class="hero-buttons">
-          <button class="btn-primary" onclick="switchTab('wiki')">
-            📖 Przejdź do Wiki
-          </button>
-          <button class="btn-secondary" onclick="switchTab('repos')">
-            📦 Nasze Repozytoria
-          </button>
-        </div>
-      </div>
-
-      <!-- Kafelki informacyjne -->
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3 class="feature-title">Wysoka Wydajność</h3>
-          <p class="feature-desc">Zoptymalizowane pod kątem niskiego zużycia zasobów, wielowątkowości oraz stabilności w każdym środowisku.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📚</div>
-          <h3 class="feature-title">Kompletna Wiki</h3>
-          <p class="feature-desc">Wyczerpujące poradniki instalacji, instrukcje kompilacji oraz wskazówki konfiguracyjne dla wszystkich projektów.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🥭</div>
-          <h3 class="feature-title">100% Open Source</h3>
-          <p class="feature-desc">Wszystkie narzędzia dostępne bezpłatnie na wolnej licencji pod szyldem społeczności Mango Labz.</p>
+          <button class="btn-primary" onclick="switchTab('wiki')">📖 Przejdź do Wiki</button>
+          <button class="btn-secondary" onclick="switchTab('repos')">📦 Nasze Repozytoria</button>
         </div>
       </div>
     </section>
 
-    <!-- ========================================================
-         SEKCJA 2: WIKI (.md z folderu ./wiki/post/)
-         ======================================================== -->
+    <!-- WIKI -->
     <section id="tab-wiki" class="tab-content">
-      <div class="wiki-header">
-        <h2>Baza Wiedzy & Poradniki</h2>
-        <p class="text-muted">Dokumentacja ładowana bezpośrednio z plików Markdown w <code>./wiki/post/</code></p>
-      </div>
-
       <div class="wiki-layout">
         <aside class="wiki-sidebar">
-          <h3>Artykuły</h3>
-          <ul class="wiki-list" id="wiki-menu"></ul>
+          <div id="wiki-menu"></div>
         </aside>
         <article class="markdown-body" id="wiki-viewer">
-          <p class="status-msg">Wybierz dokument z menu po lewej stronie...</p>
+          <p>Wybierz dokument...</p>
         </article>
       </div>
     </section>
 
-    <!-- ========================================================
-         SEKCJA 3: REPOZYTORIA
-         ======================================================== -->
+    <!-- REPOZYTORIA -->
     <section id="tab-repos" class="tab-content">
-      <div class="repos-header">
-        <h2>Nasze Repozytoria</h2>
-        <p class="text-muted">Repozytoria organizacji Mango Labz na GitHubie</p>
-      </div>
-
-      <div class="repo-grid" id="repos-container">
-        <p class="status-msg">Pobieranie repozytoriów z GitHuba...</p>
-      </div>
+      <div class="repo-grid" id="repos-container"></div>
     </section>
   </main>
 
   <script>
-    /* ========================================================
-       ROTATOR PROJEKTÓW & LINKI DO REPOZYTORIÓW
-       ======================================================== */
-    let currentSlide = 0;
-    const slides = document.querySelectorAll(".svg-slide");
-    const dots = document.querySelectorAll(".carousel-dot");
-    const titleEl = document.getElementById("project-title");
-    const badgeLink = document.getElementById("project-badge-link");
-    let slideTimer = null;
-
-    function setSlide(index) {
-      if (!slides[index]) return;
-
-      titleEl.style.opacity = "0";
-      titleEl.style.transform = "translateY(-4px)";
-
-      slides.forEach(s => s.classList.remove("active"));
-      dots.forEach(d => d.classList.remove("active"));
-
-      currentSlide = index;
-      slides[currentSlide].classList.add("active");
-      dots[currentSlide].classList.add("active");
-
-      // Dynamiczna aktualizacja tekstu i linku w górnym badge
-      setTimeout(() => {
-        titleEl.textContent = slides[currentSlide].getAttribute("data-name");
-        badgeLink.href = slides[currentSlide].getAttribute("href");
-        titleEl.style.opacity = "1";
-        titleEl.style.transform = "translateY(0)";
-      }, 180);
-
-      resetTimer();
+    // Nawigacja mobilna
+    function toggleMenu() {
+      document.getElementById("nav-actions").classList.toggle("open");
     }
-
-    function nextSlide() {
-      const next = (currentSlide + 1) % slides.length;
-      setSlide(next);
-    }
-
-    function resetTimer() {
-      if (slideTimer) clearInterval(slideTimer);
-      slideTimer = setInterval(nextSlide, 4000);
-    }
-
-    resetTimer();
-
-    /* ========================================================
-       WIKI & MARKDOWN (./wiki/post/)
-       ======================================================== */
-    const wikiPosts = [
-      { id: "intro.md", title: "Wprowadzenie i Wymagania" },
-      { id: "instalacja.md", title: "Kompilacja i Instalacja" },
-      { id: "baza-danych.md", title: "Konfiguracja Bazy Danych" },
-      { id: "ekstrakcja.md", title: "DBC, Maps, VMAP & MMAPS" }
-    ];
-
-    const GITHUB_ORG = "open-mangos";
 
     function switchTab(tabId) {
       document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
@@ -1029,105 +499,139 @@
       const targetSection = document.getElementById(`tab-${tabId}`);
       if (targetSection) targetSection.classList.add("active");
 
+      document.getElementById("nav-actions").classList.remove("open");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function initWikiMenu() {
+    // Karuzela
+    let currentSlide = 0;
+    const slides = document.querySelectorAll(".svg-slide");
+    const dots = document.querySelectorAll(".carousel-dot");
+    const titleEl = document.getElementById("project-title");
+    const badgeLink = document.getElementById("project-badge-link");
+
+    function setSlide(index) {
+      if (!slides[index]) return;
+      slides.forEach(s => s.classList.remove("active"));
+      dots.forEach(d => d.classList.remove("active"));
+
+      currentSlide = index;
+      slides[currentSlide].classList.add("active");
+      dots[currentSlide].classList.add("active");
+
+      titleEl.textContent = slides[currentSlide].getAttribute("data-name");
+      badgeLink.href = slides[currentSlide].getAttribute("href");
+    }
+
+    setInterval(() => {
+      setSlide((currentSlide + 1) % slides.length);
+    }, 4000);
+
+    /* ========================================================
+       WIKI POGRUPOWANE NA REPOZYTORIA I PODFOLDERY
+       Struktura na dysku: ./wiki/post/<folder>/<plik>.md
+       ======================================================== */
+    const wikiStructure = [
+      {
+        repoName: "Mango-Convert",
+        folder: "mango-convert",
+        posts: [
+          { file: "intro.md", title: "Wprowadzenie i formaty" },
+          { file: "uzycie.md", title: "Instrukcja użycia" }
+        ]
+      },
+      {
+        repoName: "Mango-Cam",
+        folder: "mango-cam",
+        posts: [
+          { file: "konfiguracja.md", title: "Konfiguracja kamery" },
+          { file: "api.md", title: "Protokół i endpointy" }
+        ]
+      },
+      {
+        repoName: "Open-Mangos Core",
+        folder: "core",
+        posts: [
+          { file: "instalacja.md", title: "Kompilacja silnika" },
+          { file: "baza.md", title: "Zarządzanie bazą danych" }
+        ]
+      }
+    ];
+
+    function initWiki() {
       const menu = document.getElementById("wiki-menu");
       menu.innerHTML = "";
+      let firstLoad = true;
 
-      wikiPosts.forEach((post, index) => {
-        const li = document.createElement("li");
-        const btn = document.createElement("button");
-        btn.className = "wiki-item-btn";
-        btn.textContent = post.title;
-        btn.onclick = () => loadMarkdown(post.id, btn);
-        li.appendChild(btn);
-        menu.appendChild(li);
+      wikiStructure.forEach(group => {
+        const grpEl = document.createElement("div");
+        grpEl.className = "wiki-group";
+        grpEl.innerHTML = `<div class="wiki-group-title">📁 ${group.repoName}</div>`;
 
-        if (index === 0) {
-          btn.classList.add("active");
-          loadMarkdown(post.id, btn);
-        }
+        const ul = document.createElement("ul");
+        ul.className = "wiki-list";
+
+        group.posts.forEach(post => {
+          const li = document.createElement("li");
+          const btn = document.createElement("button");
+          btn.className = "wiki-item-btn";
+          btn.textContent = post.title;
+          const relativePath = `./wiki/post/${group.folder}/${post.file}`;
+
+          btn.onclick = () => loadMarkdown(relativePath, btn);
+          li.appendChild(btn);
+          ul.appendChild(li);
+
+          if (firstLoad) {
+            btn.classList.add("active");
+            loadMarkdown(relativePath, btn);
+            firstLoad = false;
+          }
+        });
+
+        grpEl.appendChild(ul);
+        menu.appendChild(grpEl);
       });
     }
 
-    async function loadMarkdown(filename, activeBtn) {
+    async function loadMarkdown(path, btn) {
       const viewer = document.getElementById("wiki-viewer");
-      viewer.innerHTML = `<p class="status-msg">Ładowanie pliku: <code>${filename}</code>...</p>`;
-
       document.querySelectorAll(".wiki-item-btn").forEach(b => b.classList.remove("active"));
-      if (activeBtn) activeBtn.classList.add("active");
+      if (btn) btn.classList.add("active");
 
       try {
-        const response = await fetch(`./wiki/post/${filename}`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}: Nie znaleziono pliku ./wiki/post/${filename}`);
-        const markdownText = await response.text();
-        viewer.innerHTML = marked.parse(markdownText);
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Brak pliku ${path}`);
+        viewer.innerHTML = marked.parse(await res.text());
       } catch (err) {
-        viewer.innerHTML = `
-          <h2>⚠️ Błąd ładowania dokumentu</h2>
-          <p style="color: #ef4444; font-weight: 500;">${err.message}</p>
-          <blockquote>
-            <strong>Wskazówka:</strong> Uruchom stronę przez lokalny serwer HTTP (np. <code>python3 -m http.server 8080</code> lub Nginx), 
-            aby umożliwić przeglądarce odczyt plików Markdown.
-          </blockquote>
-        `;
+        viewer.innerHTML = `<h3>Błąd wczytywania</h3><p style="color:#ef4444">${err.message}</p>`;
       }
     }
 
-    async function loadGithubRepos() {
+    // Repozytoria
+    async function loadRepos() {
       const container = document.getElementById("repos-container");
-
       try {
-        const res = await fetch(`https://api.github.com/orgs/${GITHUB_ORG}/repos?sort=updated&per_page=30`);
-        if (!res.ok) throw new Error("Status: " + res.status);
-
-        const repos = await res.json();
-        container.innerHTML = "";
-
-        if (!Array.isArray(repos) || repos.length === 0) {
-          container.innerHTML = "<p class='status-msg'>Brak publicznych repozytoriów.</p>";
-          return;
-        }
-
-        repos.forEach(repo => {
-          const card = document.createElement("div");
-          card.className = "repo-card";
-          card.innerHTML = `
-            <div>
-              <div class="repo-title">
-                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a>
-              </div>
-              <p class="repo-desc">${repo.description || "Brak opisu repozytorium."}</p>
-            </div>
-            <div class="repo-meta">
-              <span>⭐ ${repo.stargazers_count}</span>
-              <span>🍴 ${repo.forks_count}</span>
-              <span>${repo.language || "Inny"}</span>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      } catch (e) {
+        const res = await fetch("https://api.github.com/orgs/open-mangos/repos");
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        container.innerHTML = data.map(r => `
+          <div class="repo-card">
+            <a href="${r.html_url}" target="_blank">${r.name}</a>
+            <p style="color:#94a3b8; margin-top:0.5rem;">${r.description || "Brak opisu."}</p>
+          </div>
+        `).join("");
+      } catch {
         container.innerHTML = `
-          <div class="repo-card">
-            <div class="repo-title"><a href="https://github.com/open-mangos/Mango-Convert" target="_blank">Mango-Convert</a></div>
-            <p class="repo-desc">Narzędzie do automatycznej konwersji i migracji formatów plików.</p>
-            <div class="repo-meta"><span>⭐ 142</span><span>C++ / Python</span></div>
-          </div>
-          <div class="repo-card">
-            <div class="repo-title"><a href="https://github.com/open-mangos/Mango-Cam" target="_blank">Mango-Cam</a></div>
-            <p class="repo-desc">Moduł do rejestracji i manipulacji widokiem kamery.</p>
-            <div class="repo-meta"><span>⭐ 89</span><span>C++</span></div>
-          </div>
+          <div class="repo-card"><a href="https://github.com/open-mangos/Mango-Convert" target="_blank">Mango-Convert</a><p style="color:#94a3b8; margin-top:0.5rem;">Narzędzie do automatycznej konwersji i migracji formatów plików.</p></div>
+          <div class="repo-card"><a href="https://github.com/open-mangos/Mango-Cam" target="_blank">Mango-Cam</a><p style="color:#94a3b8; margin-top:0.5rem;">Moduł do rejestracji i manipulacji widokiem kamery.</p></div>
         `;
       }
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      initWikiMenu();
-      loadGithubRepos();
+      initWiki();
+      loadRepos();
     });
   </script>
 </body>
