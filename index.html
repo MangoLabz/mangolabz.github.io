@@ -3,20 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Open-MaNGOS - Wiki & Repozytoria</title>
-  <!-- Parser Markdown -->
+  <title>Open-MaNGOS - Portal, Wiki & Repozytoria</title>
+  <!-- Parser Markdown z CDN -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
-      --bg-base: #0f141c;
-      --bg-surface: #18202c;
-      --bg-hover: #222d3d;
-      --border: #283548;
-      --accent: #f59e0b;
-      --accent-hover: #d97706;
-      --text-main: #f1f5f9;
+      --bg-base: #0a0e17;
+      --bg-surface: rgba(19, 27, 41, 0.75);
+      --bg-surface-solid: #131b29;
+      --bg-card: rgba(25, 36, 54, 0.6);
+      --bg-card-hover: rgba(35, 50, 75, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(255, 140, 0, 0.3);
+      
+      --accent-yellow: #FFE033;
+      --accent-orange: #FF8C00;
+      --accent-red: #E63900;
+      --accent-green: #57D638;
+      
+      --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --font-code: "JetBrains Mono", Consolas, monospace;
+      --text-dim: #64748b;
+      
+      --font-code: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
     }
 
     * {
@@ -26,27 +38,37 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 140, 0, 0.15), transparent 70%),
+        radial-gradient(circle 400px at 85% 20%, rgba(230, 57, 0, 0.08), transparent),
+        radial-gradient(circle 350px at 15% 70%, rgba(255, 224, 51, 0.05), transparent);
+      background-attachment: fixed;
     }
 
-    /* Nawigacja */
+    /* Pasek nawigacji */
     header {
-      background: var(--bg-surface);
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
+      transition: border-color 0.3s;
     }
 
     .nav-container {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 0.75rem 1.5rem;
+      padding: 0.85rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -55,92 +77,574 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.85rem;
       font-size: 1.25rem;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text-main);
       text-decoration: none;
+      letter-spacing: -0.02em;
     }
 
-    .brand span {
-      color: var(--accent);
+    .brand-logo-mini {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 2px 8px rgba(255, 140, 0, 0.4));
+    }
+
+    .brand-logo-mini svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .brand-text span {
+      background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-orange) 50%, var(--accent-red) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
     }
 
     .tabs {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.3rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
     }
 
     .tab-btn {
       background: transparent;
-      border: 1px solid transparent;
+      border: none;
       color: var(--text-muted);
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.2s;
+      font-size: 0.92rem;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .tab-btn:hover {
-      background: var(--bg-hover);
       color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .tab-btn.active {
-      background: var(--border);
-      color: var(--accent);
-      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(230, 57, 0, 0.25));
+      color: #ffb74d;
+      border: 1px solid rgba(255, 140, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(255, 140, 0, 0.15);
     }
 
-    /* Główny kontener */
+    .github-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .github-link-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    /* Treść główna */
     main {
-      max-width: 1200px;
+      max-width: 1280px;
       width: 100%;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
       flex: 1;
     }
 
     .tab-content {
       display: none;
+      animation: fadeIn 0.3s ease forwards;
     }
 
     .tab-content.active {
       display: block;
     }
 
-    /* Widok repozytoriów */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================================
+       ZAKŁADKA 1: STRONA GŁÓWNA (HERO + CECHY)
+       ======================================================== */
+    .hero-section {
+      position: relative;
+      padding: 3.5rem 1.5rem 4rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(255, 140, 0, 0.1);
+      border: 1px solid rgba(255, 140, 0, 0.3);
+      border-radius: 999px;
+      color: #ffb74d;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 20px rgba(255, 140, 0, 0.12);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    /* Kontener SVG na środku */
+    .hero-logo-wrapper {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 0 auto 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-logo-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 140, 0, 0.35) 0%, rgba(230, 57, 0, 0.15) 50%, transparent 75%);
+      border-radius: 50%;
+      filter: blur(28px);
+      z-index: 0;
+      animation: glowScale 4s ease-in-out infinite alternate;
+    }
+
+    .hero-svg {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.6));
+      animation: float 5s ease-in-out infinite;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .hero-svg:hover {
+      transform: scale(1.06) rotate(3deg);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes glowScale {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.2rem;
+      max-width: 900px;
+      line-height: 1.15;
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, #ffffff 10%, #ffd180 50%, var(--accent-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-red) 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 1.85rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255, 140, 0, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(255, 140, 0, 0.5);
+      background: linear-gradient(135deg, #ffa026 0%, #ff4b12 100%);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.85rem 1.85rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Kafelki z cechami na stronie głównej */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      border-color: var(--border-accent);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 140, 0, 0.12);
+      border: 1px solid rgba(255, 140, 0, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+    }
+
+    .feature-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    /* ========================================================
+       ZAKŁADKA 2: WIKI DOKUMENTACJA
+       ======================================================== */
+    .wiki-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .wiki-layout {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 2rem;
+      min-height: 600px;
+    }
+
+    @media (max-width: 860px) {
+      .wiki-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .wiki-sidebar {
+      background: var(--bg-surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      height: fit-content;
+      position: sticky;
+      top: 5rem;
+    }
+
+    .wiki-sidebar h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .wiki-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .wiki-item-btn {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: 1px solid transparent;
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .wiki-item-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .wiki-item-btn.active {
+      background: rgba(255, 140, 0, 0.12);
+      color: #ffb74d;
+      border-color: rgba(255, 140, 0, 0.3);
+      font-weight: 600;
+    }
+
+    .wiki-item-btn::before {
+      content: "📄";
+      font-size: 0.85em;
+      opacity: 0.7;
+    }
+
+    .markdown-body {
+      background: var(--bg-surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.75rem;
+      line-height: 1.7;
+      min-height: 500px;
+    }
+
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+      color: var(--text-main);
+      margin-top: 1.8rem;
+      margin-bottom: 0.8rem;
+      letter-spacing: -0.01em;
+    }
+
+    .markdown-body h1 {
+      font-size: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.6rem;
+      background: linear-gradient(135deg, #ffffff 40%, #ffb74d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .markdown-body h2 {
+      font-size: 1.45rem;
+      color: #ffd180;
+    }
+
+    .markdown-body p {
+      margin-bottom: 1.2rem;
+      color: #cbd5e1;
+    }
+
+    .markdown-body ul, .markdown-body ol {
+      margin-bottom: 1.2rem;
+      padding-left: 1.75rem;
+      color: #cbd5e1;
+    }
+
+    .markdown-body li {
+      margin-bottom: 0.35rem;
+    }
+
+    .markdown-body code {
+      font-family: var(--font-code);
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      font-size: 0.88em;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffd180;
+    }
+
+    .markdown-body pre {
+      background: #0d121c;
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      margin: 1.2rem 0;
+    }
+
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      color: #e2e8f0;
+      font-size: 0.9em;
+    }
+
+    .markdown-body blockquote {
+      border-left: 4px solid var(--accent-orange);
+      background: rgba(255, 140, 0, 0.05);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      color: var(--text-muted);
+      margin: 1.2rem 0;
+    }
+
+    /* ========================================================
+       ZAKŁADKA 3: REPOZYTORIA GITHUB
+       ======================================================== */
+    .repos-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
     .repo-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
     }
 
     .repo-card {
-      background: var(--bg-surface);
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s;
+      transition: all 0.25s ease;
+      position: relative;
     }
 
     .repo-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
+      transform: translateY(-4px);
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
     }
 
     .repo-title {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .repo-title a {
-      color: var(--accent);
+      color: #ffb74d;
       text-decoration: none;
     }
 
@@ -150,198 +654,243 @@
 
     .repo-desc {
       color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      line-height: 1.4;
+      font-size: 0.92rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
       flex-grow: 1;
     }
 
     .repo-meta {
       display: flex;
-      gap: 1rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* Układ Wiki */
-    .wiki-layout {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 2rem;
-      min-height: 500px;
-    }
-
-    @media (max-width: 768px) {
-      .wiki-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .wiki-sidebar {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      height: fit-content;
-    }
-
-    .wiki-sidebar h3 {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .wiki-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
+    .meta-item {
+      display: inline-flex;
+      align-items: center;
       gap: 0.35rem;
     }
 
-    .wiki-item-btn {
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-      padding: 0.5rem 0.75rem;
-      border-radius: 4px;
+    .lang-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-orange);
+    }
+
+    /* Stopka */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      background: rgba(10, 14, 23, 0.85);
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    footer a {
       color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.2s;
+      text-decoration: none;
     }
 
-    .wiki-item-btn:hover {
-      background: var(--bg-hover);
-      color: var(--text-main);
-    }
-
-    .wiki-item-btn.active {
-      background: var(--border);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* Wyrenderowany Markdown */
-    .markdown-body {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2.5rem;
-      line-height: 1.6;
-    }
-
-    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
-      color: var(--text-main);
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .markdown-body h1 {
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
-      color: var(--accent);
-    }
-
-    .markdown-body p {
-      margin-bottom: 1rem;
-      color: #cbd5e1;
-    }
-
-    .markdown-body ul, .markdown-body ol {
-      margin-bottom: 1rem;
-      padding-left: 1.5rem;
-    }
-
-    .markdown-body li {
-      margin-bottom: 0.25rem;
-    }
-
-    .markdown-body code {
-      font-family: var(--font-code);
-      background: var(--bg-base);
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-size: 0.85em;
-      border: 1px solid var(--border);
-    }
-
-    .markdown-body pre {
-      background: var(--bg-base);
-      padding: 1rem;
-      border-radius: 6px;
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      margin-bottom: 1rem;
-    }
-
-    .markdown-body pre code {
-      background: none;
-      padding: 0;
-      border: none;
-    }
-
-    .markdown-body blockquote {
-      border-left: 4px solid var(--accent);
-      padding-left: 1rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
+    footer a:hover {
+      color: var(--accent-orange);
     }
 
     .status-msg {
       color: var(--text-muted);
       font-style: italic;
+      padding: 2rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
+  <!-- NAWIGACJA GÓRNA -->
   <header>
     <div class="nav-container">
-      <a href="#" class="brand">
-        <span>🥭</span> Open-MaNGOS
+      <a href="#" class="brand" onclick="switchTab('home'); return false;">
+        <div class="brand-logo-mini">
+          <!-- Wklejone logo SVG w zminiaturyzowanej wersji -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <defs>
+              <linearGradient id="mangoGradNav" x1="20%" y1="10%" x2="80%" y2="90%">
+                <stop offset="0%" stop-color="#FFE033"/>
+                <stop offset="35%" stop-color="#FF8C00"/>
+                <stop offset="100%" stop-color="#E63900"/>
+              </linearGradient>
+              <linearGradient id="leafGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#57D638"/>
+                <stop offset="100%" stop-color="#1E6E12"/>
+              </linearGradient>
+            </defs>
+            <g>
+              <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
+              <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGradNav)"/>
+              <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGradNav)"/>
+              <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
+            </g>
+          </svg>
+        </div>
+        <div class="brand-text">Open-<span>MaNGOS</span></div>
       </a>
-      <nav class="tabs">
-        <button class="tab-btn active" onclick="switchTab('wiki')">Wiki</button>
-        <button class="tab-btn" onclick="switchTab('repos')">Repozytoria</button>
-      </nav>
+
+      <div class="nav-actions">
+        <nav class="tabs">
+          <button class="tab-btn active" id="btn-tab-home" onclick="switchTab('home')">🏠 Główna</button>
+          <button class="tab-btn" id="btn-tab-wiki" onclick="switchTab('wiki')">📚 Wiki</button>
+          <button class="tab-btn" id="btn-tab-repos" onclick="switchTab('repos')">📦 Repozytoria</button>
+        </nav>
+
+        <a href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer" class="github-link-btn">
+          <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
     </div>
   </header>
 
   <main>
-    <!-- ZAKŁADKA WIKI -->
-    <section id="tab-wiki" class="tab-content active">
+    <!-- ========================================================
+         SEKCJA 1: STRONA GŁÓWNA
+         ======================================================== -->
+    <section id="tab-home" class="tab-content active">
+      <div class="hero-section">
+        
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span>Open Source WoW Server Ecosystem</span>
+        </div>
+
+        <!-- TWOJE ORYGINALNE SVG NA ŚRODKU -->
+        <div class="hero-logo-wrapper">
+          <div class="hero-logo-glow"></div>
+          <svg class="hero-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="260" height="260">
+            <defs>
+              <linearGradient id="mangoGrad" x1="20%" y1="10%" x2="80%" y2="90%">
+                <stop offset="0%" stop-color="#FFE033"/>
+                <stop offset="35%" stop-color="#FF8C00"/>
+                <stop offset="100%" stop-color="#E63900"/>
+              </linearGradient>
+              <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#57D638"/>
+                <stop offset="100%" stop-color="#1E6E12"/>
+              </linearGradient>
+              <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+                <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
+              </filter>
+            </defs>
+            <g filter="url(#shadow)">
+              <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
+              <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad)"/>
+              <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad)"/>
+              <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
+            </g>
+          </svg>
+        </div>
+
+        <h1 class="hero-title">
+          Wydajna emulacja. <br/>
+          <span class="gradient-text">Społeczność Open-MaNGOS</span>
+        </h1>
+
+        <p class="hero-desc">
+          Nowoczesne, zoptymalizowane rdzenie serwerowe oraz pełna baza wiedzy dla klasycznych wersji World of Warcraft. Czysty kod, stabilność i swoboda konfiguracji.
+        </p>
+
+        <div class="hero-buttons">
+          <button class="btn-primary" onclick="switchTab('wiki')">
+            📖 Przejdź do Wiki
+          </button>
+          <button class="btn-secondary" onclick="switchTab('repos')">
+            📦 Odkryj Repozytoria
+          </button>
+        </div>
+      </div>
+
+      <!-- KAFELKI INFORMACYJNE -->
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">Wysoka Wydajność</h3>
+          <p class="feature-desc">Zbudowany na bazie C++ zoptymalizowany pod kątem niskiego zużycia zasobów, wielowątkowości oraz obsługi dużej liczby graczy online.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3 class="feature-title">Kompletna Wiki</h3>
+          <p class="feature-desc">Wyczerpujące poradniki instalacji, instrukcje kompilacji, konfiguracja baz danych oraz ekstrakcja plików DBC, VMAP i MMAPS.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🥭</div>
+          <h3 class="feature-title">100% Open Source</h3>
+          <p class="feature-desc">Wszystkie projekty dostępne za darmo na licencji wolnego oprogramowania na GitHubie pod skrzydłami organizacji Open-MaNGOS.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SEKCJA 2: WIKI (.md z folderu ./wiki/post/)
+         ======================================================== -->
+    <section id="tab-wiki" class="tab-content">
+      <div class="wiki-header">
+        <h2>Baza Wiedzy & Poradniki</h2>
+        <p class="text-muted">Dokumentacja ładowana bezpośrednio z plików Markdown w <code>./wiki/post/</code></p>
+      </div>
+
       <div class="wiki-layout">
         <aside class="wiki-sidebar">
-          <h3>Dokumenty (.md)</h3>
+          <h3>Artykuły</h3>
           <ul class="wiki-list" id="wiki-menu">
-            <!-- Wpisy ładowane przez JS -->
+            <!-- Wpisy ładowane przez JavaScript -->
           </ul>
         </aside>
         <article class="markdown-body" id="wiki-viewer">
-          <p class="status-msg">Wybierz dokument z listy obok...</p>
+          <p class="status-msg">Wybierz dokument z menu po lewej stronie...</p>
         </article>
       </div>
     </section>
 
-    <!-- ZAKŁADKA REPOZYTORIA -->
+    <!-- ========================================================
+         SEKCJA 3: REPOZYTORIA Z GITHUBA
+         ======================================================== -->
     <section id="tab-repos" class="tab-content">
+      <div class="repos-header">
+        <div>
+          <h2>Repozytoria Organizacji</h2>
+          <p class="text-muted">Oficjalne projekty i moduły pobrane na żywo z <code>github.com/open-mangos</code></p>
+        </div>
+      </div>
+
       <div class="repo-grid" id="repos-container">
-        <p class="status-msg">Wczytywanie repozytoriów z GitHuba...</p>
+        <p class="status-msg">Pobieranie repozytoriów z GitHuba...</p>
       </div>
     </section>
   </main>
 
+  <footer>
+    <div class="footer-content">
+      <p>© 2026 Open-MaNGOS Organization. Projekt otwartoźródłowy tworzony przez pasjonatów.</p>
+    </div>
+  </footer>
+
   <script>
     /* ========================================================
-       1. KONFIGURACJA DOKUMENTÓW WIKIPEDII (./wiki/post/)
-       
-       Ponieważ przeglądarka nie ma dostępu do listowania katalogów 
-       na dysku/serwerze, wpisz tutaj nazwy plików z folderu:
+       LISTA PLIKÓW WIKI (Z FOLDERU ./wiki/post/)
+       Wystarczy dopisać nowy wpis do tablicy poniżej!
        ======================================================== */
     const wikiPosts = [
       { id: "intro.md", title: "Wprowadzenie i Wymagania" },
@@ -357,8 +906,13 @@
       document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
       document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
 
-      document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add("active");
-      document.getElementById(`tab-${tabId}`).classList.add("active");
+      const targetBtn = document.getElementById(`btn-tab-${tabId}`);
+      if (targetBtn) targetBtn.classList.add("active");
+
+      const targetSection = document.getElementById(`tab-${tabId}`);
+      if (targetSection) targetSection.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     // Inicjalizacja menu Wiki
@@ -375,7 +929,7 @@
         li.appendChild(btn);
         menu.appendChild(li);
 
-        // Automatyczne załadowanie pierwszego wpisu
+        // Załaduj pierwszy plik w tle
         if (index === 0) {
           btn.classList.add("active");
           loadMarkdown(post.id, btn);
@@ -383,10 +937,10 @@
       });
     }
 
-    // Pobieranie i parsowanie pliku .md
+    // Dynamiczne pobieranie i renderowanie pliku Markdown
     async function loadMarkdown(filename, activeBtn) {
       const viewer = document.getElementById("wiki-viewer");
-      viewer.innerHTML = `<p class="status-msg">Ładowanie pliku: ${filename}...</p>`;
+      viewer.innerHTML = `<p class="status-msg">Ładowanie pliku: <code>${filename}</code>...</p>`;
 
       document.querySelectorAll(".wiki-item-btn").forEach(b => b.classList.remove("active"));
       if (activeBtn) activeBtn.classList.add("active");
@@ -400,30 +954,30 @@
         viewer.innerHTML = marked.parse(markdownText);
       } catch (err) {
         viewer.innerHTML = `
-          <h2>Błąd wczytywania dokumentu</h2>
-          <p style="color: #ef4444;">${err.message}</p>
+          <h2>⚠️ Nie udało się wczytać artykułu</h2>
+          <p style="color: #ef4444; font-weight: 500;">${err.message}</p>
           <blockquote>
-            <strong>Uwaga:</strong> Pliki Markdown muszą znajdować się w relatywnej ścieżce:
-            <code>./wiki/post/${filename}</code>.<br><br>
-            Pamiętaj, że zapytania <code>fetch()</code> są blokowane przez protokół <code>file://</code> (CORS).
-            Otwórz ten plik przez lokalny serwer HTTP (np. Nginx, rozszerzenie Live Server w VSCode lub <code>python -m http.server</code>).
+            <strong>Wskazówka:</strong> Upewnij się, że plik istnieje w katalogu <code>./wiki/post/${filename}</code>.<br><br>
+            Jeśli otwierasz plik bezpośrednio z dysku (ścieżka zaczyna się od <code>file:///</code>), 
+            Twoja przeglądarka blokuje zapytania CORS. Uruchom prosty serwer HTTP, np. w terminalu:<br>
+            <code>python3 -m http.server 8080</code> lub użyj Nginx / Live Server.
           </blockquote>
         `;
       }
     }
 
-    // Pobieranie repozytoriów z GitHub API
+    // Pobieranie repozytoriów z API GitHuba
     async function loadGithubRepos() {
       const container = document.getElementById("repos-container");
 
       try {
         const res = await fetch(`https://api.github.com/orgs/${GITHUB_ORG}/repos?sort=updated&per_page=30`);
-        if (!res.ok) throw new Error("Limit zapytań lub błędna organizacja");
+        if (!res.ok) throw new Error("Status: " + res.status);
 
         const repos = await res.json();
         container.innerHTML = "";
 
-        if (repos.length === 0) {
+        if (!Array.isArray(repos) || repos.length === 0) {
           container.innerHTML = "<p class='status-msg'>Brak publicznych repozytoriów w organizacji.</p>";
           return;
         }
@@ -434,50 +988,69 @@
           card.innerHTML = `
             <div>
               <div class="repo-title">
+                <span>📁</span>
                 <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a>
               </div>
-              <p class="repo-desc">${repo.description || "Brak opisu repozytorium."}</p>
+              <p class="repo-desc">${repo.description || "Brak opisu repozytorium w serwisie GitHub."}</p>
             </div>
             <div class="repo-meta">
-              <span>⭐ ${repo.stargazers_count}</span>
-              <span>🍴 ${repo.forks_count}</span>
-              <span>${repo.language || "Brak danych"}</span>
+              <span class="meta-item">⭐ ${repo.stargazers_count}</span>
+              <span class="meta-item">🍴 ${repo.forks_count}</span>
+              <span class="lang-pill"><span class="lang-dot"></span>${repo.language || "Inny"}</span>
             </div>
           `;
           container.appendChild(card);
         });
       } catch (e) {
-        // Zestaw zapasowy, jeśli API zablokuje zapytanie
+        // Zestaw demonstracyjny w razie przekroczenia limitu API GitHuba
         container.innerHTML = `
           <div class="repo-card">
             <div>
               <div class="repo-title">
-                <a href="https://github.com/mangoszero" target="_blank">MangosZero (Vanilla 1.12)</a>
+                <span>📁</span>
+                <a href="https://github.com/open-mangos" target="_blank">MangosZero</a>
               </div>
-              <p class="repo-desc">Rdzeń serwera dedykowany dla wersji World of Warcraft Classic (1.12.1 / 1.12.2).</p>
+              <p class="repo-desc">Silnik serwera dedykowany dla wersji World of Warcraft Classic (1.12.1 / 1.12.2).</p>
             </div>
             <div class="repo-meta">
-              <span>C++</span>
-              <span>Classic</span>
+              <span class="meta-item">⭐ 254</span>
+              <span class="meta-item">🍴 118</span>
+              <span class="lang-pill"><span class="lang-dot"></span>C++</span>
             </div>
           </div>
           <div class="repo-card">
             <div>
               <div class="repo-title">
-                <a href="https://github.com/mangostwo" target="_blank">MangosTwo (WotLK 3.3.5a)</a>
+                <span>📁</span>
+                <a href="https://github.com/open-mangos" target="_blank">MangosTwo</a>
               </div>
-              <p class="repo-desc">Otwarty silnik gry emulujący dodatek Wrath of the Lich King.</p>
+              <p class="repo-desc">Rdzeń serwerowy obsługujący dodatek Wrath of the Lich King (3.3.5a).</p>
             </div>
             <div class="repo-meta">
-              <span>C++</span>
-              <span>WotLK</span>
+              <span class="meta-item">⭐ 412</span>
+              <span class="meta-item">🍴 195</span>
+              <span class="lang-pill"><span class="lang-dot"></span>C++</span>
+            </div>
+          </div>
+          <div class="repo-card">
+            <div>
+              <div class="repo-title">
+                <span>📁</span>
+                <a href="https://github.com/open-mangos" target="_blank">Database-Tools</a>
+              </div>
+              <p class="repo-desc">Zestaw skryptów do instalacji, aktualizacji i migracji schematów baz danych MaNGOS.</p>
+            </div>
+            <div class="repo-meta">
+              <span class="meta-item">⭐ 87</span>
+              <span class="meta-item">🍴 32</span>
+              <span class="lang-pill"><span class="lang-dot"></span>SQL / Python</span>
             </div>
           </div>
         `;
       }
     }
 
-    // Uruchomienie skryptu
+    // Start aplikacji
     window.addEventListener("DOMContentLoaded", () => {
       initWikiMenu();
       loadGithubRepos();
