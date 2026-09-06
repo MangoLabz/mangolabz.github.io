@@ -1,98 +1,52 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Osiedle „Normalni Inaczej”</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open-MaNGOS - Wiki & Repozytoria</title>
+  <!-- Parser Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
-      --accent-peach: #f59e6c;
-      --accent-coral: #d8687a;
-      --glass-bg: rgba(32, 20, 44, 0.88);
-      --glass-border: rgba(255, 255, 255, 0.12);
-      --glass-border-light: rgba(255, 255, 255, 0.2);
-      --text-white: #ffffff;
-      --text-sub: #f3dcd0;
-      --text-dim: #c5b4cc;
+      --bg-base: #0f141c;
+      --bg-surface: #18202c;
+      --bg-hover: #222d3d;
+      --border: #283548;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --font-code: "JetBrains Mono", Consolas, monospace;
     }
 
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html {
-      background-color: #0d0914;
-      min-height: 100%;
     }
 
     body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
       min-height: 100vh;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      color: var(--text-white);
-      background: linear-gradient(180deg, #180d22 0%, #2b1530 20%, #3e1c36 38%, #1f1429 60%, #0d0914 100%);
       display: flex;
       flex-direction: column;
-      position: relative;
-      overflow-x: hidden;
     }
 
-    /* Poświata w tle */
-    .ambient-glow {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(700px, 100vw);
-      height: 450px;
-      background: radial-gradient(circle, rgba(245, 158, 108, 0.18) 0%, rgba(216, 104, 122, 0.1) 45%, transparent 70%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Sylwetka gór w tle */
-    .mountain-background {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 750px;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.65;
-    }
-
-    .mountain-background svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Płótno spadających liści */
-    #leaves-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    /* Pasek nawigacyjny */
+    /* Nawigacja */
     header {
-      position: relative;
-      z-index: 20;
-      width: 100%;
-      max-width: 1320px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 24px 24px 16px;
+      padding: 0.75rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -101,784 +55,433 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
-      text-decoration: none;
-      color: #fff;
-    }
-
-    .brand-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, rgba(245, 158, 108, 0.3), rgba(216, 104, 122, 0.2));
-      border: 1px solid var(--glass-border-light);
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .brand-icon svg {
-      width: 24px;
-      height: 24px;
-      fill: var(--accent-peach);
-    }
-
-    .brand-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 22px;
-      letter-spacing: 0.8px;
-    }
-
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 28px;
-      align-items: center;
-    }
-
-    nav a {
-      color: var(--text-dim);
-      text-decoration: none;
-      font-size: 13.5px;
+      gap: 0.75rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      transition: all 0.2s ease;
-      padding: 6px 14px;
-      border-radius: 8px;
+      color: var(--text-main);
+      text-decoration: none;
     }
 
-    nav a:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
+    .brand span {
+      color: var(--accent);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--border);
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     /* Główny kontener */
     main {
-      position: relative;
-      z-index: 20;
+      max-width: 1200px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 10px 20px 80px;
-      width: 100%;
     }
 
-    /* Górna sekcja */
-    .top-section {
-      display: grid;
-      grid-template-columns: 1.15fr 0.95fr;
-      gap: 32px;
-      align-items: center;
-      margin-bottom: 40px;
+    .tab-content {
+      display: none;
     }
 
-    /* Blok po lewej - Grafika osiedla */
-    .estate-showcase {
-      position: relative;
-      border-radius: 28px;
-      background: linear-gradient(145deg, #2a1a38, #140e1e);
-      border: 1px solid var(--glass-border-light);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-      overflow: hidden;
-      min-height: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 24px;
-    }
-
-    .estate-showcase svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .estate-badge {
-      position: relative;
-      z-index: 3;
-      align-self: flex-start;
-      margin-bottom: auto;
-      background: #120c1a;
-      border: 1px solid var(--glass-border);
-      padding: 8px 16px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent-peach);
-      letter-spacing: 0.5px;
-    }
-
-    .estate-badge-dot {
-      width: 8px;
-      height: 8px;
-      background: #57f287;
-      border-radius: 50%;
-      box-shadow: 0 0 10px #57f287;
-    }
-
-    /* Karta informacyjna */
-    .info-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border-light);
-      border-radius: 28px;
-      padding: 34px 30px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .hero-heading {
-      font-family: 'Outfit', sans-serif;
-      font-size: 38px;
-      font-weight: 900;
-      line-height: 1.12;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-    }
-
-    .hero-heading span {
-      background: linear-gradient(120deg, var(--accent-peach), #ffb288);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .tab-content.active {
       display: block;
     }
 
-    .hero-subtitle {
-      font-size: 15.5px;
-      font-weight: 700;
-      color: var(--text-sub);
-      margin-bottom: 14px;
-      line-height: 1.4;
-    }
-
-    .hero-desc {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text-dim);
-      margin-bottom: 24px;
-    }
-
-    .discord-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: linear-gradient(135deg, #e88d52, #d56073);
-      color: #fff;
-      font-size: 15.5px;
-      font-weight: 800;
-      text-decoration: none;
-      padding: 15px 28px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(216, 104, 122, 0.35);
-      transition: all 0.25s ease;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      width: 100%;
-      text-align: center;
-    }
-
-    @media (min-width: 600px) {
-      .discord-btn {
-        width: auto;
-      }
-    }
-
-    .discord-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 34px rgba(216, 104, 122, 0.5);
-      background: linear-gradient(135deg, #f69d62, #e06c7f);
-    }
-
-    .discord-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: #fff;
-    }
-
-    .link-note {
-      font-size: 12.5px;
-      color: #b09bb8;
-      font-weight: 600;
-      margin-top: 10px;
-      padding-left: 2px;
-    }
-
-    /* Kafelki z opisami */
-    .bottom-features-grid {
+    /* Widok repozytoriów */
+    .repo-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      width: 100%;
-      margin-bottom: 32px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
     }
 
-    .feature-box {
-      background: rgba(34, 21, 46, 0.88);
-      border: 1px solid var(--glass-border);
-      padding: 20px 22px;
-      border-radius: 20px;
+    .repo-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
       display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .feature-box:hover {
-      transform: translateY(-3px);
-      border-color: rgba(245, 158, 108, 0.4);
-    }
-
-    .feature-icon-wrapper {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(245, 158, 108, 0.25), rgba(216, 104, 122, 0.2));
-      border: 1px solid var(--glass-border-light);
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-    }
-
-    .feature-info h3 {
-      font-size: 15.5px;
-      font-weight: 800;
-      margin-bottom: 3px;
-      color: #ffffff;
-    }
-
-    .feature-info p {
-      font-size: 13px;
-      color: var(--text-dim);
-      line-height: 1.4;
-    }
-
-    /* Sekcja Zarządu */
-    .staff-section {
-      width: 100%;
-      background: rgba(30, 18, 42, 0.9);
-      border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 28px 24px;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .staff-header {
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: space-between;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--glass-border);
-      padding-bottom: 14px;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
-    .staff-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .staff-group-label {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--accent-peach);
-      margin: 18px 0 10px 4px;
-    }
-
-    .staff-group-label:first-of-type {
-      margin-top: 0;
-    }
-
-    .staff-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 14px;
-      margin-bottom: 8px;
-    }
-
-    .staff-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .staff-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(245, 158, 108, 0.4);
+    .repo-card:hover {
       transform: translateY(-2px);
+      border-color: var(--accent);
     }
 
-    .staff-avatar {
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #d8687a, #f59e6c);
+    .repo-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .repo-title a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .repo-title a:hover {
+      text-decoration: underline;
+    }
+
+    .repo-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+
+    .repo-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Układ Wiki */
+    .wiki-layout {
       display: grid;
-      place-items: center;
-      font-size: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+      min-height: 500px;
     }
 
-    .staff-details h4 {
-      font-size: 15px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 3px;
+    @media (max-width: 768px) {
+      .wiki-layout {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .staff-role {
-      font-size: 11px;
-      font-weight: 700;
+    .wiki-sidebar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      height: fit-content;
+    }
+
+    .wiki-sidebar h3 {
+      font-size: 0.9rem;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 3px 7px;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wiki-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .wiki-item-btn {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .wiki-item-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+    }
+
+    .wiki-item-btn.active {
+      background: var(--border);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Wyrenderowany Markdown */
+    .markdown-body {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+      color: var(--text-main);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .markdown-body h1 {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    .markdown-body p {
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
+    .markdown-body ul, .markdown-body ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    .markdown-body li {
+      margin-bottom: 0.25rem;
+    }
+
+    .markdown-body code {
+      font-family: var(--font-code);
+      background: var(--bg-base);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      border: 1px solid var(--border);
+    }
+
+    .markdown-body pre {
+      background: var(--bg-base);
+      padding: 1rem;
       border-radius: 6px;
-      display: inline-block;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
     }
 
-    .role-owner {
-      color: #ffd79a;
-      background: rgba(245, 158, 108, 0.15);
-      border: 1px solid rgba(245, 158, 108, 0.3);
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      border: none;
     }
 
-    .role-admin {
-      color: #ff9fb2;
-      background: rgba(216, 104, 122, 0.15);
-      border: 1px solid rgba(216, 104, 122, 0.3);
+    .markdown-body blockquote {
+      border-left: 4px solid var(--accent);
+      padding-left: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
     }
 
-    .role-tech {
-      color: #c9b0ff;
-      background: rgba(162, 120, 255, 0.15);
-      border: 1px solid rgba(162, 120, 255, 0.3);
-    }
-
-    .role-mod {
-      color: #a8e6cf;
-      background: rgba(87, 242, 135, 0.12);
-      border: 1px solid rgba(87, 242, 135, 0.25);
-    }
-
-    .role-helper {
-      color: #70d6ff;
-      background: rgba(112, 214, 255, 0.12);
-      border: 1px solid rgba(112, 214, 255, 0.25);
-    }
-
-    /* RWD */
-    @media (max-width: 1024px) {
-      .top-section {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      .bottom-features-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-      .estate-showcase {
-        min-height: 280px;
-      }
-      .hero-heading {
-        font-size: 30px;
-      }
-      .staff-section {
-        padding: 20px 16px;
-      }
-      header {
-        padding: 16px 20px;
-      }
-      nav {
-        display: none;
-      }
+    .status-msg {
+      color: var(--text-muted);
+      font-style: italic;
     }
   </style>
 </head>
 <body>
 
-  <!-- Efekt poświaty -->
-  <div class="ambient-glow"></div>
-
-  <!-- Sylwetka gór rozciągająca się w tle dolnej części strony -->
-  <div class="mountain-background">
-    <svg viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Tylne góry -->
-      <path d="M-100,600 L-50,220 L240,110 L520,260 L820,90 L1140,240 L1380,130 L1540,260 L1540,600 Z" fill="#1b1028" opacity="0.5"/>
-      <!-- Środkowe góry / pagórki -->
-      <path d="M-100,600 L-30,290 L180,180 L440,310 L700,160 L1020,300 L1280,190 L1540,320 L1540,600 Z" fill="#140b20" opacity="0.75"/>
-      <!-- Pierwszy plan pagórka -->
-      <path d="M0,600 L0,360 Q360,210 720,330 T1440,270 L1440,600 Z" fill="#0d0816"/>
-    </svg>
-  </div>
-
-  <!-- Płótno z liśćmi -->
-  <canvas id="leaves-canvas"></canvas>
-
-  <!-- Pasek nawigacyjny -->
   <header>
-    <a href="#" class="brand">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 14c-1.66 0-3 1.34-3 3 0 1.66 1.34 3 3 3s3-1.34 3-3c0-1.66-1.34-3-3-3zm-6-2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-9-5c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-        </svg>
-      </div>
-      <span class="brand-title">Osiedleni "Normalni Inaczej"</span>
-    </a>
-    <nav>
-      <ul>
-        <li><a href="#">O nas</a></li>
-        <li><a href="#zarzad">Zarząd</a></li>
-        <li><a href="https://discord.gg/normalni-inaczej" target="_blank">Dołącz</a></li>
-      </ul>
-    </nav>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <span>🥭</span> Open-MaNGOS
+      </a>
+      <nav class="tabs">
+        <button class="tab-btn active" onclick="switchTab('wiki')">Wiki</button>
+        <button class="tab-btn" onclick="switchTab('repos')">Repozytoria</button>
+      </nav>
+    </div>
   </header>
 
-  <!-- Główna treść -->
   <main>
-    
-    <!-- GÓRNA SEKCJA -->
-    <div class="top-section">
-      
-      <!-- Blok graficzny bloku -->
-      <div class="estate-showcase">
-        <svg viewBox="0 0 700 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#462446"/>
-              <stop offset="50%" stop-color="#703657"/>
-              <stop offset="100%" stop-color="#2d1c3a"/>
-            </linearGradient>
-            <linearGradient id="mountGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#3b2046"/>
-              <stop offset="100%" stop-color="#1f132b"/>
-            </linearGradient>
-            <linearGradient id="bldgGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#8d4d42"/>
-              <stop offset="100%" stop-color="#4e2a32"/>
-            </linearGradient>
-            <linearGradient id="bldgGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#aa6858"/>
-              <stop offset="100%" stop-color="#61363e"/>
-            </linearGradient>
-            <linearGradient id="roofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#552c3c"/>
-              <stop offset="100%" stop-color="#301625"/>
-            </linearGradient>
-            <linearGradient id="grassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#343d3b"/>
-              <stop offset="100%" stop-color="#181d22"/>
-            </linearGradient>
-            <linearGradient id="pathGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#857177"/>
-              <stop offset="100%" stop-color="#4d414a"/>
-            </linearGradient>
-          </defs>
-
-          <rect width="700" height="450" fill="url(#skyGrad)"/>
-          <path d="M-20,240 L160,110 L340,260 L520,90 L720,250 L720,450 L-20,450 Z" fill="url(#mountGrad)" opacity="0.8"/>
-          <path d="M-10,310 Q280,240 710,290 L710,450 L-10,450 Z" fill="url(#grassGrad)"/>
-
-          <rect x="230" y="160" width="240" height="190" rx="6" fill="url(#bldgGrad1)"/>
-          <polygon points="210,160 350,90 490,160" fill="url(#roofGrad)"/>
-          
-          <rect x="110" y="210" width="130" height="140" rx="4" fill="url(#bldgGrad2)"/>
-          <polygon points="95,210 175,160 255,210" fill="url(#roofGrad)"/>
-
-          <rect x="260" y="190" width="36" height="46" rx="4" fill="#ffd79a" opacity="0.9"/>
-          <line x1="278" y1="190" x2="278" y2="236" stroke="#4e2a32" stroke-width="2"/>
-          <line x1="260" y1="213" x2="296" y2="213" stroke="#4e2a32" stroke-width="2"/>
-
-          <rect x="330" y="190" width="36" height="46" rx="4" fill="#ffd79a" opacity="0.9"/>
-          <line x1="348" y1="190" x2="348" y2="236" stroke="#4e2a32" stroke-width="2"/>
-          <line x1="330" y1="213" x2="366" y2="213" stroke="#4e2a32" stroke-width="2"/>
-
-          <rect x="400" y="190" width="36" height="46" rx="4" fill="#ffd79a" opacity="0.75"/>
-          <line x1="418" y1="190" x2="418" y2="236" stroke="#4e2a32" stroke-width="2"/>
-          <line x1="400" y1="213" x2="436" y2="213" stroke="#4e2a32" stroke-width="2"/>
-
-          <rect x="140" y="240" width="30" height="40" rx="3" fill="#ffd79a" opacity="0.85"/>
-          <rect x="190" y="240" width="30" height="40" rx="3" fill="#ffd79a" opacity="0.7"/>
-
-          <rect x="325" y="270" width="50" height="80" rx="4" fill="#1b1220"/>
-          <rect x="335" y="280" width="30" height="70" fill="#f8c37d" opacity="0.85"/>
-
-          <path d="M350,350 L310,450 L520,450 L410,350 Z" fill="url(#pathGrad)"/>
-          <path d="M40,450 Q360,330 680,450" stroke="#3c2a38" stroke-width="16" fill="none"/>
-          <path d="M40,446 Q360,326 680,446" stroke="#8d5b68" stroke-width="4" fill="none"/>
-
-          <line x1="530" y1="360" x2="530" y2="270" stroke="#1d1522" stroke-width="4"/>
-          <polygon points="522,270 538,270 534,250 526,250" fill="#ffd79a"/>
-          <circle cx="530" cy="260" r="16" fill="#ffd79a" opacity="0.35"/>
-
-          <rect x="180" y="380" width="60" height="6" rx="2" fill="#9d624a"/>
-          <rect x="180" y="390" width="60" height="6" rx="2" fill="#9d624a"/>
-          <line x1="188" y1="380" x2="188" y2="408" stroke="#1f1822" stroke-width="4"/>
-          <line x1="232" y1="380" x2="232" y2="408" stroke="#1f1822" stroke-width="4"/>
-        </svg>
-
-        <div class="estate-badge">
-          <span class="estate-badge-dot"></span>
-          Klimatyczne Osiedle Discord
-        </div>
+    <!-- ZAKŁADKA WIKI -->
+    <section id="tab-wiki" class="tab-content active">
+      <div class="wiki-layout">
+        <aside class="wiki-sidebar">
+          <h3>Dokumenty (.md)</h3>
+          <ul class="wiki-list" id="wiki-menu">
+            <!-- Wpisy ładowane przez JS -->
+          </ul>
+        </aside>
+        <article class="markdown-body" id="wiki-viewer">
+          <p class="status-msg">Wybierz dokument z listy obok...</p>
+        </article>
       </div>
-
-      <!-- Karta informacyjna -->
-      <div class="info-card">
-        <h1 class="hero-heading">
-          Osiedle
-          <span>Normalni Inaczej</span>
-        </h1>
-
-        <div class="hero-subtitle">
-          Wspólnota ze wspólnym językiem &amp; Twój kawałek normalności
-        </div>
-
-        <p class="hero-desc">
-          Masz dość udawania kogoś, kim nie jesteś? <strong>Normalni Inaczej</strong> to bezpieczna przystań skierowana do psiaków i furrasów, lecz jesteśmy w 100% otwarci dla każdego, kto ceni sobie luz, wspólne gierki i szczere rozmowy bez spiny. Wpadaj na czat i zobacz, jak dobrze być „normalnym” po swojemu!
-        </p>
-
-        <div style="display: flex; flex-direction: column; align-items: flex-start;">
-          <a href="https://discord.gg/normalni-inaczej" target="_blank" class="discord-btn">
-            <svg viewBox="0 0 24 24">
-              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.078.078 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-            </svg>
-            DOŁĄCZ DO NASZEGO OSIEDLA
-          </a>
-          <span class="link-note">discord.gg/normalni-inaczej</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- KAFELKI ZALET (BEZ OKALAJĄCEGO BLOKU) -->
-    <div class="bottom-features-grid">
-      
-      <div class="feature-box">
-        <div class="feature-icon-wrapper">🐾</div>
-        <div class="feature-info">
-          <h3>Furry &amp; Doggo Friendly</h3>
-          <p>Przestrzeń stworzona z myślą o futrzakach, pupilach i wszystkich swobodnych duszach.</p>
-        </div>
-      </div>
-
-      <div class="feature-box">
-        <div class="feature-icon-wrapper">🎮</div>
-        <div class="feature-info">
-          <h3>Wspólne Gry i Wieczory</h3>
-          <p>Od luźnych gier imprezowych po długie sesje gamingowe na kanałach głosowych.</p>
-        </div>
-      </div>
-
-      <div class="feature-box">
-        <div class="feature-icon-wrapper">💬</div>
-        <div class="feature-info">
-          <h3>Pogadanki bez Spinki</h3>
-          <p>Szczere rozmowy o wszystkim, wzajemne wsparcie i zero toksycznego oceniania.</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ZARZĄD OSIEDLA -->
-    <section class="staff-section" id="zarzad">
-      <div class="staff-header">
-        <h2 class="staff-title">🏛️ Zarząd &amp; Ekipa Osiedla</h2>
-      </div>
-      
-      <div class="staff-group-label">👑 Właściciele i Zarząd Główny</div>
-      <div class="staff-grid">
-        <div class="staff-card">
-          <div class="staff-avatar">👑</div>
-          <div class="staff-details">
-            <h4>Właściciel</h4>
-            <span class="staff-role role-owner">Zarząd Główny</span>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-avatar">💎</div>
-          <div class="staff-details">
-            <h4>Współwłaściciel</h4>
-            <span class="staff-role role-owner">Zarząd Główny</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="staff-group-label">🛡️ Administracja &amp; Technika</div>
-      <div class="staff-grid">
-        <div class="staff-card">
-          <div class="staff-avatar">🛡️</div>
-          <div class="staff-details">
-            <h4>Head Admin</h4>
-            <span class="staff-role role-admin">Nadzór Ekipy</span>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-avatar">⚡</div>
-          <div class="staff-details">
-            <h4>Administrator</h4>
-            <span class="staff-role role-admin">Administracja</span>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-avatar">⚙️</div>
-          <div class="staff-details">
-            <h4>Technik / Dev</h4>
-            <span class="staff-role role-tech">Boty &amp; Systemy</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="staff-group-label">🐾 Moderacja &amp; Pomocnicy</div>
-      <div class="staff-grid">
-        <div class="staff-card">
-          <div class="staff-avatar">🐾</div>
-          <div class="staff-details">
-            <h4>Senior Moderator</h4>
-            <span class="staff-role role-mod">Opiekun Chatu</span>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-avatar">🛡️</div>
-          <div class="staff-details">
-            <h4>Moderator</h4>
-            <span class="staff-role role-mod">Moderacja</span>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-avatar">🌱</div>
-          <div class="staff-details">
-            <h4>Trial Mod</h4>
-            <span class="staff-role role-mod">Okres Próbny</span>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-avatar">✨</div>
-          <div class="staff-details">
-            <h4>Helper / Support</h4>
-            <span class="staff-role role-helper">Pomoc Użytkownikom</span>
-          </div>
-        </div>
-      </div>
-
     </section>
 
+    <!-- ZAKŁADKA REPOZYTORIA -->
+    <section id="tab-repos" class="tab-content">
+      <div class="repo-grid" id="repos-container">
+        <p class="status-msg">Wczytywanie repozytoriów z GitHuba...</p>
+      </div>
+    </section>
   </main>
 
-  <!-- Skrypt opadających liści -->
   <script>
-    const canvas = document.getElementById('leaves-canvas');
-    const ctx = canvas.getContext('2d');
-
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const leafPalette = [
-      '#e5833c',
-      '#f6a651',
-      '#bf4343',
-      '#993344',
-      '#d9758f',
-      '#e89758'
+    /* ========================================================
+       1. KONFIGURACJA DOKUMENTÓW WIKIPEDII (./wiki/post/)
+       
+       Ponieważ przeglądarka nie ma dostępu do listowania katalogów 
+       na dysku/serwerze, wpisz tutaj nazwy plików z folderu:
+       ======================================================== */
+    const wikiPosts = [
+      { id: "intro.md", title: "Wprowadzenie i Wymagania" },
+      { id: "instalacja.md", title: "Kompilacja i Instalacja" },
+      { id: "baza-danych.md", title: "Konfiguracja Bazy Danych" },
+      { id: "ekstrakcja.md", title: "DBC, Maps, VMAP & MMAPS" }
     ];
 
-    class FallingLeaf {
-      constructor(initial = false) {
-        this.reset(initial);
-      }
+    const GITHUB_ORG = "open-mangos";
 
-      reset(initial = false) {
-        this.x = Math.random() * (width + 120) - 60;
-        this.y = initial ? Math.random() * height : -30;
-        this.size = Math.random() * 14 + 10;
-        this.speedY = Math.random() * 1.2 + 0.8;
-        this.speedX = Math.random() * 1.4 + 0.6;
-        this.rotation = Math.random() * Math.PI * 2;
-        this.rotationSpeed = (Math.random() - 0.5) * 0.035;
-        this.oscillation = Math.random() * Math.PI * 2;
-        this.oscillationSpeed = Math.random() * 0.03 + 0.012;
-        this.color = leafPalette[Math.floor(Math.random() * leafPalette.length)];
-        this.opacity = Math.random() * 0.45 + 0.55;
-      }
+    // Przełączanie zakładek
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
 
-      update() {
-        this.oscillation += this.oscillationSpeed;
-        this.y += this.speedY;
-        this.x += this.speedX + Math.sin(this.oscillation) * 1.3;
-        this.rotation += this.rotationSpeed;
+      document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add("active");
+      document.getElementById(`tab-${tabId}`).classList.add("active");
+    }
 
-        if (this.y > height + 40 || this.x > width + 70) {
-          this.reset(false);
+    // Inicjalizacja menu Wiki
+    function initWikiMenu() {
+      const menu = document.getElementById("wiki-menu");
+      menu.innerHTML = "";
+
+      wikiPosts.forEach((post, index) => {
+        const li = document.createElement("li");
+        const btn = document.createElement("button");
+        btn.className = "wiki-item-btn";
+        btn.textContent = post.title;
+        btn.onclick = () => loadMarkdown(post.id, btn);
+        li.appendChild(btn);
+        menu.appendChild(li);
+
+        // Automatyczne załadowanie pierwszego wpisu
+        if (index === 0) {
+          btn.classList.add("active");
+          loadMarkdown(post.id, btn);
         }
-      }
+      });
+    }
 
-      draw() {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.rotation);
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = this.color;
+    // Pobieranie i parsowanie pliku .md
+    async function loadMarkdown(filename, activeBtn) {
+      const viewer = document.getElementById("wiki-viewer");
+      viewer.innerHTML = `<p class="status-msg">Ładowanie pliku: ${filename}...</p>`;
 
-        ctx.beginPath();
-        ctx.moveTo(0, -this.size / 2);
-        ctx.quadraticCurveTo(this.size / 2, -this.size / 4, this.size / 2, this.size / 3);
-        ctx.quadraticCurveTo(0, this.size, 0, this.size);
-        ctx.quadraticCurveTo(0, this.size, -this.size / 2, this.size / 3);
-        ctx.quadraticCurveTo(-this.size / 2, -this.size / 4, 0, -this.size / 2);
-        ctx.fill();
+      document.querySelectorAll(".wiki-item-btn").forEach(b => b.classList.remove("active"));
+      if (activeBtn) activeBtn.classList.add("active");
 
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.22)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(0, -this.size / 2.2);
-        ctx.lineTo(0, this.size / 1.2);
-        ctx.stroke();
-
-        ctx.restore();
+      try {
+        const response = await fetch(`./wiki/post/${filename}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: Nie znaleziono pliku ./wiki/post/${filename}`);
+        }
+        const markdownText = await response.text();
+        viewer.innerHTML = marked.parse(markdownText);
+      } catch (err) {
+        viewer.innerHTML = `
+          <h2>Błąd wczytywania dokumentu</h2>
+          <p style="color: #ef4444;">${err.message}</p>
+          <blockquote>
+            <strong>Uwaga:</strong> Pliki Markdown muszą znajdować się w relatywnej ścieżce:
+            <code>./wiki/post/${filename}</code>.<br><br>
+            Pamiętaj, że zapytania <code>fetch()</code> są blokowane przez protokół <code>file://</code> (CORS).
+            Otwórz ten plik przez lokalny serwer HTTP (np. Nginx, rozszerzenie Live Server w VSCode lub <code>python -m http.server</code>).
+          </blockquote>
+        `;
       }
     }
 
-    const leavesCount = 35;
-    const leaves = Array.from({ length: leavesCount }, () => new FallingLeaf(true));
+    // Pobieranie repozytoriów z GitHub API
+    async function loadGithubRepos() {
+      const container = document.getElementById("repos-container");
 
-    function animateLeaves() {
-      ctx.clearRect(0, 0, width, height);
-      for (const leaf of leaves) {
-        leaf.update();
-        leaf.draw();
+      try {
+        const res = await fetch(`https://api.github.com/orgs/${GITHUB_ORG}/repos?sort=updated&per_page=30`);
+        if (!res.ok) throw new Error("Limit zapytań lub błędna organizacja");
+
+        const repos = await res.json();
+        container.innerHTML = "";
+
+        if (repos.length === 0) {
+          container.innerHTML = "<p class='status-msg'>Brak publicznych repozytoriów w organizacji.</p>";
+          return;
+        }
+
+        repos.forEach(repo => {
+          const card = document.createElement("div");
+          card.className = "repo-card";
+          card.innerHTML = `
+            <div>
+              <div class="repo-title">
+                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a>
+              </div>
+              <p class="repo-desc">${repo.description || "Brak opisu repozytorium."}</p>
+            </div>
+            <div class="repo-meta">
+              <span>⭐ ${repo.stargazers_count}</span>
+              <span>🍴 ${repo.forks_count}</span>
+              <span>${repo.language || "Brak danych"}</span>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (e) {
+        // Zestaw zapasowy, jeśli API zablokuje zapytanie
+        container.innerHTML = `
+          <div class="repo-card">
+            <div>
+              <div class="repo-title">
+                <a href="https://github.com/mangoszero" target="_blank">MangosZero (Vanilla 1.12)</a>
+              </div>
+              <p class="repo-desc">Rdzeń serwera dedykowany dla wersji World of Warcraft Classic (1.12.1 / 1.12.2).</p>
+            </div>
+            <div class="repo-meta">
+              <span>C++</span>
+              <span>Classic</span>
+            </div>
+          </div>
+          <div class="repo-card">
+            <div>
+              <div class="repo-title">
+                <a href="https://github.com/mangostwo" target="_blank">MangosTwo (WotLK 3.3.5a)</a>
+              </div>
+              <p class="repo-desc">Otwarty silnik gry emulujący dodatek Wrath of the Lich King.</p>
+            </div>
+            <div class="repo-meta">
+              <span>C++</span>
+              <span>WotLK</span>
+            </div>
+          </div>
+        `;
       }
-      requestAnimationFrame(animateLeaves);
     }
 
-    animateLeaves();
+    // Uruchomienie skryptu
+    window.addEventListener("DOMContentLoaded", () => {
+      initWikiMenu();
+      loadGithubRepos();
+    });
   </script>
 </body>
 </html>
