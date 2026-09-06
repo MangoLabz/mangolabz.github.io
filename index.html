@@ -74,8 +74,18 @@
       text-decoration: none;
     }
 
-    .brand-logo-mini { width: 34px; height: 34px; }
-    .brand-logo-mini svg { width: 100%; height: 100%; }
+    .brand-logo-mini { 
+      width: 34px; 
+      height: 34px; 
+      display: flex; 
+      align-items: center; 
+    }
+    .brand-logo-mini img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain; 
+    }
+
     .brand-text span {
       background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-orange) 100%);
       -webkit-background-clip: text;
@@ -140,7 +150,7 @@
       text-decoration: none;
     }
 
-    /* RWD dla menu nawigacyjnego */
+    /* RWD dla menu */
     @media (max-width: 768px) {
       .hamburger-btn { display: block; }
       .nav-actions {
@@ -194,6 +204,7 @@
       margin-bottom: 2rem;
       text-decoration: none;
       cursor: pointer;
+      backdrop-filter: blur(8px);
     }
 
     .pulse-dot {
@@ -240,10 +251,24 @@
       transition: opacity 0.5s ease, transform 0.5s ease;
       pointer-events: none;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .svg-slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
-    .svg-slide svg { width: 100%; height: 100%; }
+    
+    .svg-slide img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain;
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.6));
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .svg-slide:hover img {
+      transform: scale(1.05) rotate(1deg);
+    }
 
     .carousel-indicators { display: flex; gap: 0.5rem; margin-bottom: 2.2rem; }
     .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); cursor: pointer; }
@@ -285,7 +310,7 @@
       cursor: pointer;
     }
 
-    /* Układ Wiki z repozytoriami i podfolderami */
+    /* Układ Wiki */
     .wiki-layout {
       display: grid;
       grid-template-columns: 290px 1fr;
@@ -360,18 +385,11 @@
     <div class="nav-container">
       <a href="#" class="brand" onclick="switchTab('home'); return false;">
         <div class="brand-logo-mini">
-          <svg viewBox="0 0 512 512">
-            <defs>
-              <linearGradient id="mangoNav" x1="20%" y1="10%" x2="80%" y2="90%"><stop offset="0%" stop-color="#FFE033"/><stop offset="100%" stop-color="#E63900"/></linearGradient>
-            </defs>
-            <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 Z" fill="#4A2A0C"/>
-            <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoNav)"/>
-          </svg>
+          <img src="./assets/icon-convert.svg" alt="Mango Labz Logo" />
         </div>
         <div class="brand-text">Mango <span>Labz</span></div>
       </a>
 
-      <!-- Przycisk menu dla urządzeń mobilnych -->
       <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">☰</button>
 
       <div class="nav-actions" id="nav-actions">
@@ -395,53 +413,23 @@
           <span class="project-name-text" id="project-title">Mango-Convert</span>
         </a>
 
+        <!-- Slajdy ładujące pliki SVG z /assets/ -->
         <div class="carousel-container">
           <div class="hero-logo-glow"></div>
 
           <!-- Slide 1: Mango-Convert -->
           <a class="svg-slide active" data-index="0" data-name="Mango-Convert" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 512 512">
-              <defs>
-                <linearGradient id="mg1" x1="20%" y1="10%" x2="80%" y2="90%"><stop offset="0%" stop-color="#FFE033"/><stop offset="100%" stop-color="#E63900"/></linearGradient>
-                <linearGradient id="lf1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#57D638"/><stop offset="100%" stop-color="#1E6E12"/></linearGradient>
-              </defs>
-              <g>
-                <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#lf1)"/>
-                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mg1)"/>
-                <circle cx="257" cy="290" r="72" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
-                <g transform="translate(257, 290)">
-                  <path d="M -32 -14 L 18 -14 L 10 -24 L 35 -6 L 10 12 L 18 2 L -32 2 Z" fill="#FF8C00" />
-                  <path d="M 32 14 L -18 14 L -10 24 L -35 6 L -10 -12 L -18 -2 L 32 -2 Z" fill="#57D638" />
-                </g>
-              </g>
-            </svg>
+            <img src="./assets/icon-convert.svg" alt="Mango-Convert" />
           </a>
 
           <!-- Slide 2: Mango-Cam -->
           <a class="svg-slide" data-index="1" data-name="Mango-Cam" href="https://github.com/open-mangos/Mango-Cam" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 512 512">
-              <g>
-                <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#lf1)"/>
-                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mg1)"/>
-                <circle cx="257" cy="290" r="75" fill="#1a1a1a" stroke="#333" stroke-width="4"/>
-                <circle cx="257" cy="290" r="48" fill="#1e3a5f"/>
-                <circle cx="257" cy="290" r="22" fill="#000"/>
-                <circle cx="230" cy="265" r="12" fill="#ffffff" opacity="0.6"/>
-              </g>
-            </svg>
+            <img src="./assets/icon-cam.svg" alt="Mango-Cam" />
           </a>
 
           <!-- Slide 3: Mango Labz Core -->
           <a class="svg-slide" data-index="2" data-name="Mango Labz Core" href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 512 512">
-              <g>
-                <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#lf1)"/>
-                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mg1)"/>
-              </g>
-            </svg>
+            <img src="./assets/icon-core.svg" alt="Mango Labz Core" />
           </a>
         </div>
 
@@ -528,8 +516,7 @@
     }, 4000);
 
     /* ========================================================
-       WIKI POGRUPOWANE NA REPOZYTORIA I PODFOLDERY
-       Struktura na dysku: ./wiki/post/<folder>/<plik>.md
+       WIKI: POGRUPOWANE NA PODFOLDERY
        ======================================================== */
     const wikiStructure = [
       {
