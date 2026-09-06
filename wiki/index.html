@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mango Labz - Oficjalna Wiki</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg-base: #0a0e17;
+      --bg-surface: rgba(19, 27, 41, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent-orange: #FF8C00;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: rgba(10, 14, 23, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand { font-size: 1.2rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .brand span { color: var(--accent-orange); }
+    .back-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .back-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    main {
+      max-width: 1300px;
+      width: 100%;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      flex: 1;
+    }
+    @media (max-width: 800px) {
+      main { grid-template-columns: 1fr; }
+    }
+    aside {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      height: fit-content;
+    }
+    .repo-group { margin-bottom: 1.4rem; }
+    .repo-header {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-orange);
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
+    .nav-item {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem 0.65rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .nav-item.active { color: #ffb74d; background: rgba(255, 140, 0, 0.15); font-weight: 600; }
+    article {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      line-height: 1.7;
+    }
+    article h1 { color: var(--accent-orange); margin-bottom: 1rem; }
+    article code { background: rgba(0,0,0,0.4); padding: 0.2rem 0.4rem; border-radius: 4px; color: #ffb74d; }
+    article pre { background: #080c14; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="../" class="brand">Mango <span>Labz</span> Docs</a>
+      <a href="../" class="back-btn">← Powrót do strony głównej</a>
+    </div>
+  </header>
+
+  <main>
+    <aside id="menu-root"></aside>
+    <article id="doc-viewer"><p>Ładowanie dokumentacji...</p></article>
+  </main>
+
+  <script>
+    // Ścieżki relatywne z poziomu folderu /wiki/
+    const wikiData = [
+      {
+        repo: "Mango-Convert",
+        folder: "mango-convert",
+        items: [
+          { file: "intro.md", title: "Wprowadzenie i formaty" },
+          { file: "uzycie.md", title: "Instrukcja użycia" }
+        ]
+      },
+      {
+        repo: "Mango-Cam",
+        folder: "mango-cam",
+        items: [
+          { file: "konfiguracja.md", title: "Konfiguracja kamery" },
+          { file: "api.md", title: "Protokół i endpointy" }
+        ]
+      },
+      {
+        repo: "Open-Mangos Core",
+        folder: "core",
+        items: [
+          { file: "instalacja.md", title: "Kompilacja silnika" },
+          { file: "baza.md", title: "Zarządzanie bazą danych" }
+        ]
+      }
+    ];
+
+    function init() {
+      const root = document.getElementById("menu-root");
+      let first = true;
+
+      wikiData.forEach(group => {
+        const div = document.createElement("div");
+        div.className = "repo-group";
+        div.innerHTML = `<div class="repo-header">📦 ${group.repo}</div>`;
+
+        const ul = document.createElement("ul");
+        ul.className = "nav-list";
+
+        group.items.forEach(item => {
+          const li = document.createElement("li");
+          const btn = document.createElement("button");
+          btn.className = "nav-item";
+          btn.textContent = item.title;
+          const path = `./post/${group.folder}/${item.file}`;
+
+          btn.onclick = () => loadDoc(path, btn);
+          li.appendChild(btn);
+          ul.appendChild(li);
+
+          if (first) {
+            btn.classList.add("active");
+            loadDoc(path, btn);
+            first = false;
+          }
+        });
+
+        div.appendChild(ul);
+        root.appendChild(div);
+      });
+    }
+
+    async function loadDoc(url, btn) {
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+
+      const viewer = document.getElementById("doc-viewer");
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Nie znaleziono ${url}`);
+        viewer.innerHTML = marked.parse(await res.text());
+      } catch (e) {
+        viewer.innerHTML = `<h3>Błąd</h3><p style="color:#ef4444;">${e.message}</p>`;
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
