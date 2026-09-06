@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ango Labz</title>
+  <title>Mango Labz - Wiki & Repozytoria</title>
   <!-- Parser Markdown z CDN -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
@@ -190,11 +190,11 @@
     }
 
     /* ========================================================
-       SEKCJA GŁÓWNA & ROTATOR PROJEKTÓW
+       SEKCJA GŁÓWNA & ROTATOR (MANGO LABZ)
        ======================================================== */
     .hero-section {
       position: relative;
-      padding: 2rem 1.5rem 3.5rem;
+      padding: 2.5rem 1.5rem 4rem;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -202,46 +202,55 @@
       justify-content: center;
     }
 
-    /* Plakietka z dynamiczną nazwą projektu nad logo */
+    /* Klikalny badge nad grafiką */
     .project-display-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.65rem;
-      padding: 0.55rem 1.4rem;
-      background: rgba(255, 140, 0, 0.1);
+      padding: 0.45rem 1.2rem;
+      background: rgba(20, 26, 38, 0.8);
       border: 1px solid rgba(255, 140, 0, 0.35);
       border-radius: 999px;
       margin-bottom: 2rem;
-      box-shadow: 0 0 25px rgba(255, 140, 0, 0.18);
-      min-height: 44px;
+      box-shadow: 0 0 20px rgba(255, 140, 0, 0.15);
+      backdrop-filter: blur(8px);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
     }
 
-    .project-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.2rem 0.5rem;
-      border-radius: 6px;
-      color: #cbd5e1;
-    }
-
-    .project-name-text {
-      color: #ffb74d;
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+    .project-display-badge:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 140, 0, 0.6);
+      box-shadow: 0 0 25px rgba(255, 140, 0, 0.3);
     }
 
     .pulse-dot {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       background: var(--accent-green);
       border-radius: 50%;
-      box-shadow: 0 0 10px var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
       animation: pulse 2s infinite;
+    }
+
+    .project-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      color: #94a3b8;
+    }
+
+    .project-name-text {
+      color: #ff9800;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     @keyframes pulse {
@@ -249,11 +258,11 @@
       50% { transform: scale(1.3); opacity: 0.7; }
     }
 
-    /* Karuzela logo SVG */
+    /* Karuzela ze slajdami */
     .carousel-container {
       position: relative;
-      width: 280px;
-      height: 280px;
+      width: 270px;
+      height: 270px;
       margin: 0 auto 1.5rem;
       display: flex;
       align-items: center;
@@ -264,9 +273,9 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle, rgba(255, 140, 0, 0.35) 0%, rgba(230, 57, 0, 0.15) 55%, transparent 75%);
+      background: radial-gradient(circle, rgba(255, 140, 0, 0.32) 0%, rgba(230, 57, 0, 0.12) 55%, transparent 75%);
       border-radius: 50%;
-      filter: blur(30px);
+      filter: blur(32px);
       z-index: 0;
       animation: glowScale 4s ease-in-out infinite alternate;
     }
@@ -278,11 +287,13 @@
       width: 100%;
       height: 100%;
       opacity: 0;
-      transform: scale(0.9) translateY(10px);
-      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(0.92) translateY(8px);
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       pointer-events: none;
       z-index: 1;
       filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.6));
+      display: block;
+      text-decoration: none;
     }
 
     .svg-slide.active {
@@ -290,16 +301,17 @@
       transform: scale(1) translateY(0);
       pointer-events: auto;
       z-index: 2;
+      cursor: pointer;
     }
 
     .svg-slide svg {
       width: 100%;
       height: 100%;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .svg-slide:hover svg {
-      transform: scale(1.05) rotate(2deg);
+      transform: scale(1.06) rotate(1deg);
     }
 
     @keyframes glowScale {
@@ -307,51 +319,54 @@
       100% { transform: scale(1.25); opacity: 1; }
     }
 
-    /* Wskaźniki rotatora (kropki) */
+    /* Kropki kontrolne */
     .carousel-indicators {
       display: flex;
-      gap: 0.6rem;
-      margin-bottom: 2rem;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2.2rem;
       z-index: 5;
     }
 
     .carousel-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.2);
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.3s ease;
     }
 
     .carousel-dot.active {
-      width: 26px;
+      width: 22px;
       border-radius: 999px;
-      background: var(--accent-orange);
-      border-color: var(--accent-yellow);
-      box-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
+      background: #ff9800;
+      box-shadow: 0 0 10px rgba(255, 152, 0, 0.6);
     }
 
+    /* Typografia nagłówka */
     .hero-title {
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-size: clamp(2.5rem, 5.5vw, 4.2rem);
       font-weight: 900;
       letter-spacing: -0.03em;
-      margin-bottom: 1.2rem;
-      max-width: 900px;
-      line-height: 1.15;
+      line-height: 1.1;
+      margin-bottom: 0.85rem;
     }
 
-    .hero-title .gradient-text {
-      background: linear-gradient(135deg, #ffffff 10%, #ffd180 50%, var(--accent-orange) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .hero-title .main-brand {
+      color: #ffffff;
+      display: block;
+    }
+
+    .hero-title .highlight-text {
+      color: #ff9800;
+      display: block;
     }
 
     .hero-desc {
       font-size: clamp(1.05rem, 2vw, 1.25rem);
       color: var(--text-muted);
-      max-width: 680px;
+      max-width: 720px;
       margin-bottom: 2.5rem;
       line-height: 1.6;
     }
@@ -360,51 +375,51 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 1rem;
+      gap: 1.2rem;
     }
 
     .btn-primary {
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-red) 100%);
+      background: linear-gradient(135deg, #ff9800 0%, #e65100 100%);
       color: #fff;
       font-weight: 700;
       font-size: 1rem;
-      padding: 0.85rem 1.85rem;
+      padding: 0.9rem 2rem;
       border-radius: var(--radius-md);
       text-decoration: none;
       border: none;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(255, 140, 0, 0.35);
+      box-shadow: 0 8px 24px rgba(230, 81, 0, 0.4);
       transition: all 0.25s ease;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(255, 140, 0, 0.5);
-      background: linear-gradient(135deg, #ffa026 0%, #ff4b12 100%);
+      box-shadow: 0 12px 30px rgba(230, 81, 0, 0.55);
+      background: linear-gradient(135deg, #ffa726 0%, #ef6c00 100%);
     }
 
     .btn-secondary {
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(25, 33, 48, 0.85);
       color: var(--text-main);
       font-weight: 600;
       font-size: 1rem;
-      padding: 0.85rem 1.85rem;
+      padding: 0.9rem 2rem;
       border-radius: var(--radius-md);
       text-decoration: none;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       cursor: pointer;
       backdrop-filter: blur(8px);
       transition: all 0.25s ease;
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(35, 45, 65, 0.95);
       border-color: rgba(255, 255, 255, 0.25);
       transform: translateY(-2px);
     }
@@ -414,7 +429,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem;
-      margin-top: 3.5rem;
+      margin-top: 4rem;
     }
 
     .feature-card {
@@ -615,7 +630,7 @@
     }
 
     /* ========================================================
-       REPOZYTORIA GITHUB
+       REPOZYTORIA
        ======================================================== */
     .repos-header {
       margin-bottom: 2rem;
@@ -681,15 +696,6 @@
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 1.5rem;
-      background: rgba(10, 14, 23, 0.85);
-      color: var(--text-dim);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
     .status-msg {
       color: var(--text-muted);
       font-style: italic;
@@ -725,7 +731,7 @@
             </g>
           </svg>
         </div>
-        <div class="brand-text">Mango<span>Labz</span></div>
+        <div class="brand-text">Mango <span>Labz</span></div>
       </a>
 
       <div class="nav-actions">
@@ -747,24 +753,24 @@
 
   <main>
     <!-- ========================================================
-         SEKCJA 1: STRONA GŁÓWNA (Z ROTATOREM LOGO I PROJEKTÓW)
+         SEKCJA 1: STRONA GŁÓWNA (MANGO LABZ)
          ======================================================== -->
     <section id="tab-home" class="tab-content active">
       <div class="hero-section">
         
-        <!-- Wskaźnik nad logiem z dynamiczną nazwą projektu -->
-        <div class="project-display-badge">
+        <!-- Klikalny badge nad grafiką przenoszący do repozytorium -->
+        <a id="project-badge-link" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer" class="project-display-badge" title="Kliknij, aby otworzyć repozytorium">
           <span class="pulse-dot"></span>
           <span class="project-tag">Projekt</span>
-          <span class="project-name-text" id="project-title">Open-Mangos Core</span>
-        </div>
+          <span class="project-name-text" id="project-title">Mango-Convert</span>
+        </a>
 
-        <!-- Rotator SVG na środku -->
+        <!-- Karuzela klikalnych logo SVG przenoszących do repozytorium -->
         <div class="carousel-container">
           <div class="hero-logo-glow"></div>
 
-          <!-- 1. Baza: Open-Mangos -->
-          <div class="svg-slide active" data-index="0" data-name="Open-Mangos Core">
+          <!-- 1. Mango-Convert -->
+          <a class="svg-slide active" data-index="0" data-name="Mango-Convert" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer" title="Otwórz repozytorium Mango-Convert">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <defs>
                 <linearGradient id="mangoGrad1" x1="20%" y1="10%" x2="80%" y2="90%">
@@ -776,6 +782,10 @@
                   <stop offset="0%" stop-color="#57D638"/>
                   <stop offset="100%" stop-color="#1E6E12"/>
                 </linearGradient>
+                <linearGradient id="arrowGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FFE033"/>
+                  <stop offset="100%" stop-color="#FF8C00"/>
+                </linearGradient>
                 <filter id="shadow1" x="-10%" y="-10%" width="130%" height="130%">
                   <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
                 </filter>
@@ -784,38 +794,7 @@
                 <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
                 <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad1)"/>
                 <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad1)"/>
-                <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
-              </g>
-            </svg>
-          </div>
 
-          <!-- 2. Mango-Convert -->
-          <div class="svg-slide" data-index="1" data-name="Mango-Convert">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <defs>
-                <linearGradient id="mangoGrad2" x1="20%" y1="10%" x2="80%" y2="90%">
-                  <stop offset="0%" stop-color="#FFE033"/>
-                  <stop offset="35%" stop-color="#FF8C00"/>
-                  <stop offset="100%" stop-color="#E63900"/>
-                </linearGradient>
-                <linearGradient id="leafGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#57D638"/>
-                  <stop offset="100%" stop-color="#1E6E12"/>
-                </linearGradient>
-                <linearGradient id="arrowGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#FFE033"/>
-                  <stop offset="100%" stop-color="#FF8C00"/>
-                </linearGradient>
-                <filter id="shadow2" x="-10%" y="-10%" width="130%" height="130%">
-                  <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
-                </filter>
-              </defs>
-              <g filter="url(#shadow2)">
-                <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
-                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad2)"/>
-                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad2)"/>
-
-                <!-- Symbol konwersji -->
                 <g id="converter-symbol">
                   <circle cx="257" cy="290" r="72" fill="#1a1a1a" stroke="#333333" stroke-width="4"/>
                   <circle cx="257" cy="290" r="58" fill="#111111" stroke="#444444" stroke-width="1.5"/>
@@ -828,10 +807,51 @@
                 <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
               </g>
             </svg>
-          </div>
+          </a>
 
-          <!-- 3. Mango-Cam -->
-          <div class="svg-slide" data-index="2" data-name="Mango-Cam">
+          <!-- 2. Mango-Cam -->
+          <a class="svg-slide" data-index="1" data-name="Mango-Cam" href="https://github.com/open-mangos/Mango-Cam" target="_blank" rel="noopener noreferrer" title="Otwórz repozytorium Mango-Cam">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <defs>
+                <linearGradient id="mangoGrad2" x1="20%" y1="10%" x2="80%" y2="90%">
+                  <stop offset="0%" stop-color="#FFE033"/>
+                  <stop offset="35%" stop-color="#FF8C00"/>
+                  <stop offset="100%" stop-color="#E63900"/>
+                </linearGradient>
+                <linearGradient id="leafGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#57D638"/>
+                  <stop offset="100%" stop-color="#1E6E12"/>
+                </linearGradient>
+                <filter id="shadow2" x="-10%" y="-10%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
+                </filter>
+                <linearGradient id="lensReflect" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4a90e2" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0.9"/>
+                </linearGradient>
+              </defs>
+              <g filter="url(#shadow2)">
+                <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
+                <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad2)"/>
+                <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad2)"/>
+                
+                <g id="camera-lens">
+                  <circle cx="257" cy="290" r="75" fill="#1a1a1a" stroke="#333333" stroke-width="4"/>
+                  <circle cx="257" cy="290" r="60" fill="#0d0d0d" stroke="#555555" stroke-width="1"/>
+                  <circle cx="257" cy="290" r="48" fill="url(#lensReflect)"/>
+                  <circle cx="257" cy="290" r="22" fill="#000000"/>
+                  <circle cx="230" cy="265" r="14" fill="#ffffff" opacity="0.6"/>
+                  <circle cx="242" cy="253" r="5" fill="#ffffff" opacity="0.8"/>
+                  <ellipse cx="282" cy="315" rx="12" ry="4" fill="#ffffff" opacity="0.2" transform="rotate(-30 282 315)"/>
+                </g>
+
+                <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
+              </g>
+            </svg>
+          </a>
+
+          <!-- 3. Mango Labz Core -->
+          <a class="svg-slide" data-index="2" data-name="Mango Labz Core" href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer" title="Otwórz organizację Mango Labz">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <defs>
                 <linearGradient id="mangoGrad3" x1="20%" y1="10%" x2="80%" y2="90%">
@@ -846,49 +866,35 @@
                 <filter id="shadow3" x="-10%" y="-10%" width="130%" height="130%">
                   <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000000" flood-opacity="0.38"/>
                 </filter>
-                <linearGradient id="lensReflect" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#4a90e2" stop-opacity="0.6"/>
-                  <stop offset="100%" stop-color="#000000" stop-opacity="0.9"/>
-                </linearGradient>
               </defs>
               <g filter="url(#shadow3)">
                 <path d="M256 105 C256 65, 235 38, 220 28 C215 24, 208 28, 212 35 C222 55, 236 78, 238 105 Z" fill="#4A2A0C"/>
                 <path d="M245 95 C285 40, 365 35, 405 60 C410 64, 404 74, 396 74 C340 76, 282 115, 245 95 Z" fill="url(#leafGrad3)"/>
                 <path d="M245 105 C345 105, 415 180, 415 285 C415 400, 335 475, 235 475 C135 475, 100 390, 100 285 C100 170, 160 105, 245 105 Z" fill="url(#mangoGrad3)"/>
-                
-                <!-- Obiektyw aparatu -->
-                <g id="camera-lens">
-                  <circle cx="257" cy="290" r="75" fill="#1a1a1a" stroke="#333333" stroke-width="4"/>
-                  <circle cx="257" cy="290" r="60" fill="#0d0d0d" stroke="#555555" stroke-width="1"/>
-                  <circle cx="257" cy="290" r="48" fill="url(#lensReflect)"/>
-                  <circle cx="257" cy="290" r="22" fill="#000000"/>
-                  <circle cx="230" cy="265" r="14" fill="#ffffff" opacity="0.6"/>
-                  <circle cx="242" cy="253" r="5" fill="#ffffff" opacity="0.8"/>
-                  <ellipse cx="282" cy="315" rx="12" ry="4" fill="#ffffff" opacity="0.2" transform="rotate(-30 282 315)"/>
-                </g>
-
                 <path d="M155 175 C140 225, 135 275, 145 325 C138 305, 134 255, 144 195 C148 175, 153 160, 155 175 Z" fill="#FFFFFF" opacity="0.45"/>
               </g>
             </svg>
-          </div>
+          </a>
         </div>
 
-        <!-- Kropki pod logiem do manualnej kontroli -->
+        <!-- Kropki kontrolne -->
         <div class="carousel-indicators">
           <div class="carousel-dot active" onclick="setSlide(0)"></div>
           <div class="carousel-dot" onclick="setSlide(1)"></div>
           <div class="carousel-dot" onclick="setSlide(2)"></div>
         </div>
 
+        <!-- Napisy -->
         <h1 class="hero-title">
-          Mango Labz<br/>
-          <span class="gradient-text">Otwórz sie na nas!</span>
+          <span class="main-brand">Mango Labz</span>
+          <span class="highlight-text">Otwórz sie na nas!</span>
         </h1>
 
         <p class="hero-desc">
           Open-Source projekty które pomogą ci w tym cyfrowym świecie.
         </p>
 
+        <!-- Przyciski akcji -->
         <div class="hero-buttons">
           <button class="btn-primary" onclick="switchTab('wiki')">
             📖 Przejdź do Wiki
@@ -899,22 +905,22 @@
         </div>
       </div>
 
-      <!-- Kafelki -->
+      <!-- Kafelki informacyjne -->
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3 class="feature-title">Wysoka Wydajność</h3>
-          <p class="feature-desc">Zbudowany na bazie C++ zoptymalizowany pod kątem niskiego zużycia zasobów, wielowątkowości oraz stabilności.</p>
+          <p class="feature-desc">Zoptymalizowane pod kątem niskiego zużycia zasobów, wielowątkowości oraz stabilności w każdym środowisku.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">📚</div>
           <h3 class="feature-title">Kompletna Wiki</h3>
-          <p class="feature-desc">Wyczerpujące poradniki instalacji, instrukcje kompilacji, konfiguracja baz danych oraz ekstrakcja plików DBC, VMAP i MMAPS.</p>
+          <p class="feature-desc">Wyczerpujące poradniki instalacji, instrukcje kompilacji oraz wskazówki konfiguracyjne dla wszystkich projektów.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🥭</div>
           <h3 class="feature-title">100% Open Source</h3>
-          <p class="feature-desc">Wszystkie narzędzia dostępne bezpłatnie na licencji wolnego oprogramowania na GitHubie pod skrzydłami Open-Mangos.</p>
+          <p class="feature-desc">Wszystkie narzędzia dostępne bezpłatnie na wolnej licencji pod szyldem społeczności Mango Labz.</p>
         </div>
       </div>
     </section>
@@ -944,8 +950,8 @@
          ======================================================== -->
     <section id="tab-repos" class="tab-content">
       <div class="repos-header">
-        <h2>Repozytoria Organizacji</h2>
-        <p class="text-muted">Projekty pobrane z <code>github.com/open-mangos</code></p>
+        <h2>Nasze Repozytoria</h2>
+        <p class="text-muted">Repozytoria organizacji Mango Labz na GitHubie</p>
       </div>
 
       <div class="repo-grid" id="repos-container">
@@ -954,24 +960,20 @@
     </section>
   </main>
 
-  <footer>
-    <p>© 2026 Open-Mangos Organization. Wszystkie prawa zastrzeżone.</p>
-  </footer>
-
   <script>
     /* ========================================================
-       ROTATOR PROJEKTÓW NA STRONIE GŁÓWNEJ
+       ROTATOR PROJEKTÓW & LINKI DO REPOZYTORIÓW
        ======================================================== */
     let currentSlide = 0;
     const slides = document.querySelectorAll(".svg-slide");
     const dots = document.querySelectorAll(".carousel-dot");
     const titleEl = document.getElementById("project-title");
+    const badgeLink = document.getElementById("project-badge-link");
     let slideTimer = null;
 
     function setSlide(index) {
       if (!slides[index]) return;
 
-      // Animacja zanikania tekstu tytułowego
       titleEl.style.opacity = "0";
       titleEl.style.transform = "translateY(-4px)";
 
@@ -982,11 +984,13 @@
       slides[currentSlide].classList.add("active");
       dots[currentSlide].classList.add("active");
 
+      // Dynamiczna aktualizacja tekstu i linku w górnym badge
       setTimeout(() => {
         titleEl.textContent = slides[currentSlide].getAttribute("data-name");
+        badgeLink.href = slides[currentSlide].getAttribute("href");
         titleEl.style.opacity = "1";
         titleEl.style.transform = "translateY(0)";
-      }, 200);
+      }, 180);
 
       resetTimer();
     }
@@ -998,13 +1002,13 @@
 
     function resetTimer() {
       if (slideTimer) clearInterval(slideTimer);
-      slideTimer = setInterval(nextSlide, 4000); // zmiana co 4 sekundy
+      slideTimer = setInterval(nextSlide, 4000);
     }
 
     resetTimer();
 
     /* ========================================================
-       OBSŁUGA WIKI I MARKDOWN (./wiki/post/)
+       WIKI & MARKDOWN (./wiki/post/)
        ======================================================== */
     const wikiPosts = [
       { id: "intro.md", title: "Wprowadzenie i Wymagania" },
@@ -1062,11 +1066,11 @@
         viewer.innerHTML = marked.parse(markdownText);
       } catch (err) {
         viewer.innerHTML = `
-          <h2>⚠️ Błąd ładowania artykułu</h2>
+          <h2>⚠️ Błąd ładowania dokumentu</h2>
           <p style="color: #ef4444; font-weight: 500;">${err.message}</p>
           <blockquote>
-            <strong>Wskazówka:</strong> Uruchom stronę przez serwer WWW (np. Nginx lub <code>python3 -m http.server 8080</code>), 
-            ponieważ otwieranie bezpośrednio z dysku (<code>file:///</code>) blokuje odczyt plików fetch().
+            <strong>Wskazówka:</strong> Uruchom stronę przez lokalny serwer HTTP (np. <code>python3 -m http.server 8080</code> lub Nginx), 
+            aby umożliwić przeglądarce odczyt plików Markdown.
           </blockquote>
         `;
       }
@@ -1106,16 +1110,15 @@
           container.appendChild(card);
         });
       } catch (e) {
-        // Zapasowa lista projektów
         container.innerHTML = `
           <div class="repo-card">
-            <div class="repo-title"><a href="#">Mango-Convert</a></div>
-            <p class="repo-desc">Narzędzie do automatycznej konwersji i migracji struktur danych MaNGOS.</p>
+            <div class="repo-title"><a href="https://github.com/open-mangos/Mango-Convert" target="_blank">Mango-Convert</a></div>
+            <p class="repo-desc">Narzędzie do automatycznej konwersji i migracji formatów plików.</p>
             <div class="repo-meta"><span>⭐ 142</span><span>C++ / Python</span></div>
           </div>
           <div class="repo-card">
-            <div class="repo-title"><a href="#">Mango-Cam</a></div>
-            <p class="repo-desc">Moduł rejestracji i manipulacji widokiem kamery w czasie rzeczywistym na serwerze.</p>
+            <div class="repo-title"><a href="https://github.com/open-mangos/Mango-Cam" target="_blank">Mango-Cam</a></div>
+            <p class="repo-desc">Moduł do rejestracji i manipulacji widokiem kamery.</p>
             <div class="repo-meta"><span>⭐ 89</span><span>C++</span></div>
           </div>
         `;
