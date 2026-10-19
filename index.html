@@ -2,624 +2,1105 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mango Labz - Wiki & Repozytoria</title>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <script>
+    // Motyw ustawiamy przed renderowaniem, żeby nie było mignięcia
+    (function () {
+      var t = "auto";
+      try { t = localStorage.getItem("mango-theme") || "auto"; } catch (e) {}
+      if (t !== "auto") document.documentElement.dataset.theme = t;
+    })();
+  </script>
+  <title>Mango Labz</title>
+  <meta name="description" content="Mango Labz — darmowe aplikacje od Mango Team. Lista aplikacji aktualizuje się automatycznie z GitHuba." />
+  <!-- Ikona zespołu prosto z GitHuba (aktualizuje się razem z awatarem MangoLabz) -->
+  <link rel="icon" type="image/png" href="https://github.com/MangoLabz.png?size=64" />
+  <link rel="apple-touch-icon" href="https://github.com/MangoLabz.png?size=180" />
   <style>
+    /* Tokeny kolorów zarejestrowane jako <color>, żeby zmiana motywu
+       przechodziła płynnie (przeglądarki bez View Transitions) */
+    @property --bg               { syntax: "<color>"; inherits: true; initial-value: #f5f5f7; }
+    @property --label            { syntax: "<color>"; inherits: true; initial-value: #1d1d1f; }
+    @property --label-2          { syntax: "<color>"; inherits: true; initial-value: #3c3c43b8; }
+    @property --label-3          { syntax: "<color>"; inherits: true; initial-value: #3c3c4380; }
+    @property --glass-tint       { syntax: "<color>"; inherits: true; initial-value: #ffffff75; }
+    @property --glass-tint-hover { syntax: "<color>"; inherits: true; initial-value: #ffffff99; }
+    @property --rim-hi           { syntax: "<color>"; inherits: true; initial-value: #fffffff2; }
+    @property --rim-lo           { syntax: "<color>"; inherits: true; initial-value: #ffffff59; }
+    @property --inner-hi         { syntax: "<color>"; inherits: true; initial-value: #ffffffb3; }
+    @property --inner-lo         { syntax: "<color>"; inherits: true; initial-value: #0000000f; }
+    @property --fill             { syntax: "<color>"; inherits: true; initial-value: #7878801f; }
+    @property --thumb            { syntax: "<color>"; inherits: true; initial-value: #ffffffeb; }
+
+    /* =========================================================
+       Design tokens — wartości jak w systemach Apple
+       (systemOrange / systemGreen, etykiety, tła, typografia SF)
+       ========================================================= */
     :root {
-      --bg-base: #0a0e17;
-      --bg-surface: rgba(19, 27, 41, 0.75);
-      --bg-surface-solid: #131b29;
-      --bg-card: rgba(25, 36, 54, 0.6);
-      --bg-card-hover: rgba(35, 50, 75, 0.75);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(255, 140, 0, 0.3);
-      --accent-yellow: #FFE033;
-      --accent-orange: #FF8C00;
-      --accent-red: #E63900;
-      --accent-green: #57D638;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --font-code: "JetBrains Mono", Consolas, monospace;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
+      color-scheme: light dark;
+
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      --ease: cubic-bezier(.32, .72, 0, 1);          /* krzywa sprężyny UIKit */
+      --ease-out: cubic-bezier(.22, 1, .36, 1);
+
+      /* Light */
+      --bg: #f5f5f7;
+      --label: #1d1d1f;
+      --label-2: rgba(60, 60, 67, 0.72);
+      --label-3: rgba(60, 60, 67, 0.5);
+      --separator: rgba(60, 60, 67, 0.18);
+      --orange: #ff9500;
+      --orange-text: #c93400;   /* systemOrange w wersji o wysokim kontraście — dla tekstu */
+      --green: #34c759;
+      --focus: #0071e3;
+      --title-grad: linear-gradient(100deg, #ff9500 0%, #ff6a00 55%, #e63900 100%);
+
+      --fill: rgba(120, 120, 128, 0.12);
+      --thumb: rgba(255, 255, 255, 0.92);
+
+      /* Liquid Glass — light */
+      --glass-tint: rgba(255, 255, 255, 0.46);
+      --glass-tint-hover: rgba(255, 255, 255, 0.6);
+      --glass-solid: #ffffffee;
+      --glass-blur: 14px;
+      --glass-sat: 190%;
+      --glass-bright: 1.06;
+      --rim-hi: rgba(255, 255, 255, 0.95);
+      --rim-lo: rgba(255, 255, 255, 0.35);
+      --inner-hi: rgba(255, 255, 255, 0.7);
+      --inner-lo: rgba(0, 0, 0, 0.06);
+      --drop: 0 10px 30px rgba(0, 0, 0, 0.10), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+      --blob-a: 0.55;
+      --blob-b: 0.35;
     }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #000000;
+        --label: #f5f5f7;
+        --label-2: rgba(235, 235, 245, 0.68);
+        --label-3: rgba(235, 235, 245, 0.42);
+        --separator: rgba(84, 84, 88, 0.6);
+        --orange: #ff9f0a;
+        --orange-text: #ff9f0a;
+        --green: #30d158;
+        --focus: #0a84ff;
+        --fill: rgba(120, 120, 128, 0.24);
+        --thumb: rgba(255, 255, 255, 0.18);
+        --title-grad: linear-gradient(100deg, #ffd60a 0%, #ff9f0a 45%, #ff5a1f 100%);
+
+        --glass-tint: rgba(58, 58, 64, 0.38);
+        --glass-tint-hover: rgba(78, 78, 86, 0.46);
+        --glass-solid: #1c1c1eee;
+        --glass-blur: 16px;
+        --glass-sat: 180%;
+        --glass-bright: 1.12;
+        --rim-hi: rgba(255, 255, 255, 0.7);
+        --rim-lo: rgba(255, 255, 255, 0.12);
+        --inner-hi: rgba(255, 255, 255, 0.28);
+        --inner-lo: rgba(0, 0, 0, 0.35);
+        --drop: 0 14px 40px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
+
+        --blob-a: 0.42;
+        --blob-b: 0.24;
+      }
+    }
+    :root[data-theme="light"] { color-scheme: light; }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #000000;
+      --label: #f5f5f7;
+      --label-2: rgba(235, 235, 245, 0.68);
+      --label-3: rgba(235, 235, 245, 0.42);
+      --separator: rgba(84, 84, 88, 0.6);
+      --orange: #ff9f0a;
+      --orange-text: #ff9f0a;
+      --green: #30d158;
+      --focus: #0a84ff;
+      --fill: rgba(120, 120, 128, 0.24);
+      --thumb: rgba(255, 255, 255, 0.18);
+      --title-grad: linear-gradient(100deg, #ffd60a 0%, #ff9f0a 45%, #ff5a1f 100%);
+
+      --glass-tint: rgba(58, 58, 64, 0.38);
+      --glass-tint-hover: rgba(78, 78, 86, 0.46);
+      --glass-solid: #1c1c1eee;
+      --glass-blur: 16px;
+      --glass-sat: 180%;
+      --glass-bright: 1.12;
+      --rim-hi: rgba(255, 255, 255, 0.7);
+      --rim-lo: rgba(255, 255, 255, 0.12);
+      --inner-hi: rgba(255, 255, 255, 0.28);
+      --inner-lo: rgba(0, 0, 0, 0.35);
+      --drop: 0 14px 40px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
+
+      --blob-a: 0.42;
+      --blob-b: 0.24;
+    }
+
+    :root {
+      transition:
+        --bg .6s var(--ease), --label .6s var(--ease), --label-2 .6s var(--ease), --label-3 .6s var(--ease),
+        --glass-tint .6s var(--ease), --glass-tint-hover .6s var(--ease), --rim-hi .6s var(--ease), --rim-lo .6s var(--ease),
+        --inner-hi .6s var(--ease), --inner-lo .6s var(--ease), --fill .6s var(--ease), --thumb .6s var(--ease);
+    }
+    body { transition: background-color .6s var(--ease), color .6s var(--ease); }
+    /* Zmiana motywu przez View Transitions: nowy wygląd "rozlewa się" kołem od przycisku */
+    :root.vt-theme, :root.vt-theme body { transition: none !important; }
+    ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+    ::view-transition-new(root) { z-index: 2; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
-      background-color: var(--bg-base);
-      color: var(--text-main);
+      font-family: var(--font);
+      font-size: 17px;
+      line-height: 1.47059;
+      letter-spacing: -0.022em;
+      font-weight: 400;
+      background: var(--bg);
+      color: var(--label);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.6;
-      background-image: 
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 140, 0, 0.15), transparent 70%),
-        radial-gradient(circle 400px at 85% 20%, rgba(230, 57, 0, 0.08), transparent);
-      background-attachment: fixed;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; letter-spacing: inherit; color: inherit; border: none; background: none; cursor: pointer; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 999px; }
+    .wrap { max-width: 1024px; margin: 0 auto; padding: 0 max(22px, env(safe-area-inset-left)); }
 
-    /* Pasek nawigacji */
-    header {
-      background: rgba(10, 14, 23, 0.9);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
+    /* ---------- Tło: miękkie plamy koloru, które szkło załamuje ---------- */
+    .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
+    .b1 { width: 620px; height: 620px; background: #ff9500; opacity: var(--blob-a); top: -200px; left: -160px; animation: drift1 24s ease-in-out infinite; }
+    .b2 { width: 480px; height: 480px; background: #ffd60a; opacity: var(--blob-b); top: 26%; right: -160px; animation: drift2 28s ease-in-out infinite; }
+    .b3 { width: 560px; height: 560px; background: #ff3b30; opacity: var(--blob-b); bottom: -240px; left: 22%; animation: drift3 32s ease-in-out infinite; }
+    .b4 { width: 360px; height: 360px; background: #34c759; opacity: calc(var(--blob-b) * 0.8); top: 58%; left: -120px; animation: drift2 36s ease-in-out infinite reverse; }
+    @keyframes drift1 { 50% { transform: translate(180px, 120px) scale(1.12); } }
+    @keyframes drift2 { 50% { transform: translate(-160px, -100px) scale(0.92); } }
+    @keyframes drift3 { 50% { transform: translate(120px, -160px) scale(1.08); } }
 
-    .nav-container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0.85rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* =========================================================
+       Liquid Glass
+       - matowy odcień + rozmycie + podbita saturacja (jak w iOS 26)
+       - soczewka na krawędziach (refrakcja SVG, Chromium)
+       - jasna krawędź od strony światła, ciemniejsza po przeciwnej
+       - odblask (specular) przesuwający się za kursorem
+       ========================================================= */
+    .glass {
       position: relative;
+      isolation: isolate;
+      background: var(--glass-tint);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+      box-shadow:
+        inset 0 1px 0.5px var(--inner-hi),
+        inset 0 -1px 0.5px var(--inner-lo),
+        inset 0 10px 24px -14px var(--inner-hi),
+        var(--drop);
+      transition: background .3s var(--ease-out), transform .45s var(--ease), box-shadow .3s;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-main);
-      text-decoration: none;
+    /* Krawędź szkła: gradient obrysu z najjaśniejszym punktem od strony "światła" */
+    .glass::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; z-index: 2;
+      background:
+        radial-gradient(160px circle at var(--mx, 20%) var(--my, 0%), var(--rim-hi), transparent 70%),
+        linear-gradient(135deg, var(--rim-hi) 0%, var(--rim-lo) 30%, transparent 55%, var(--rim-lo) 80%, var(--rim-hi) 100%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
     }
-
-    .brand-logo-mini { 
-      width: 34px; 
-      height: 34px; 
-      display: flex; 
-      align-items: center; 
+    /* Odblask na powierzchni */
+    .glass::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+      background: radial-gradient(260px circle at var(--mx, 50%) var(--my, -40%), rgba(255, 255, 255, 0.22), transparent 60%);
+      opacity: 0; transition: opacity .4s var(--ease-out);
     }
-    .brand-logo-mini img { 
-      width: 100%; 
-      height: 100%; 
-      object-fit: contain; 
+    @media (hover: hover) {
+      .glass:hover::after { opacity: 1; }
+      .glass.interactive:hover { background: var(--glass-tint-hover); }
     }
+    .glass.interactive:active { transform: scale(0.96); }
 
-    .brand-text span {
-      background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-orange) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hamburger-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text-main);
-      font-size: 1.7rem;
-      cursor: pointer;
-      padding: 0.2rem;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 0.4rem;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 0.3rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      padding: 0.55rem 1.15rem;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.92rem;
-      transition: all 0.25s;
-    }
-
-    .tab-btn:hover { color: var(--text-main); }
-    .tab-btn.active {
-      background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(230, 57, 0, 0.25));
-      color: #ffb74d;
-      border: 1px solid rgba(255, 140, 0, 0.4);
-    }
-
-    .github-link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      padding: 0.55rem 1rem;
-      border-radius: var(--radius-md);
-      font-size: 0.88rem;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    /* RWD dla menu */
-    @media (max-width: 768px) {
-      .hamburger-btn { display: block; }
-      .nav-actions {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: rgba(13, 19, 31, 0.98);
-        border-bottom: 1px solid var(--border);
-        padding: 1.25rem;
-        gap: 1rem;
-        box-shadow: 0 20px 30px rgba(0,0,0,0.5);
-      }
-      .nav-actions.open { display: flex; }
-      .tabs { flex-direction: column; width: 100%; }
-      .tab-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; }
-      .github-link-btn { width: 100%; justify-content: center; }
-    }
-
-    main {
-      max-width: 1280px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
-      flex: 1;
-    }
-
-    .tab-content { display: none; animation: fadeIn 0.3s ease forwards; }
-    .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Sekcja Główna */
-    .hero-section {
-      padding: 2.5rem 1.5rem 4rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .project-display-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.45rem 1.2rem;
-      background: rgba(20, 26, 38, 0.8);
-      border: 1px solid rgba(255, 140, 0, 0.35);
-      border-radius: 999px;
-      margin-bottom: 2rem;
-      text-decoration: none;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-    }
-
-    .pulse-dot {
-      width: 8px; height: 8px;
-      background: var(--accent-green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-green);
-    }
-
-    .project-tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 0.2rem 0.55rem;
-      border-radius: 4px;
-      color: #94a3b8;
-    }
-
-    .project-name-text { color: #ff9800; font-size: 1rem; font-weight: 700; }
-
-    .carousel-container {
-      position: relative;
-      width: 270px;
-      height: 270px;
-      margin: 0 auto 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-logo-glow {
-      position: absolute;
-      width: 100%; height: 100%;
-      background: radial-gradient(circle, rgba(255, 140, 0, 0.32) 0%, transparent 70%);
-      filter: blur(30px);
-    }
-
-    .svg-slide {
-      position: absolute;
-      width: 100%; height: 100%;
-      opacity: 0;
-      transform: scale(0.92);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      pointer-events: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .svg-slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
-    
-    .svg-slide img { 
-      width: 100%; 
-      height: 100%; 
-      object-fit: contain;
-      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.6));
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .svg-slide:hover img {
-      transform: scale(1.05) rotate(1deg);
-    }
-
-    .carousel-indicators { display: flex; gap: 0.5rem; margin-bottom: 2.2rem; }
-    .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); cursor: pointer; }
-    .carousel-dot.active { width: 22px; border-radius: 999px; background: #ff9800; }
-
-    .hero-title {
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 0.85rem;
-    }
-    .hero-title .main-brand { color: #ffffff; display: block; }
-    .hero-title .highlight-text { color: #ff9800; display: block; }
-
-    .hero-desc {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 720px;
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
-    .btn-primary {
-      background: linear-gradient(135deg, #ff9800 0%, #e65100 100%);
+    /* Zabarwione szkło — główna akcja (jak przycisk "prominent" w iOS) */
+    .glass.tinted {
+      background: color-mix(in srgb, var(--orange) 82%, transparent);
       color: #fff;
-      font-weight: 700;
-      padding: 0.85rem 1.85rem;
-      border-radius: var(--radius-md);
-      border: none;
-      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0.5px rgba(255, 255, 255, 0.75),
+        inset 0 -1px 0.5px rgba(120, 40, 0, 0.35),
+        inset 0 12px 22px -14px rgba(255, 255, 255, 0.9),
+        0 10px 28px color-mix(in srgb, var(--orange) 40%, transparent);
     }
-    .btn-secondary {
-      background: rgba(25, 33, 48, 0.85);
-      color: var(--text-main);
-      font-weight: 600;
-      padding: 0.85rem 1.85rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      cursor: pointer;
+    @media (hover: hover) { .glass.tinted:hover { background: color-mix(in srgb, var(--orange) 92%, transparent); } }
+
+    /* Ustawienia dostępności systemu */
+    @media (prefers-reduced-transparency: reduce) {
+      .glass { background: var(--glass-solid) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+      .glass.tinted { background: var(--orange) !important; }
+      .blob { opacity: 0.15; }
+    }
+    @media (prefers-contrast: more) {
+      .glass { background: var(--glass-solid); }
+      .glass::before { background: var(--label); }
+      :root { --label-2: var(--label); --label-3: var(--label); }
     }
 
-    /* Układ Wiki */
-    .wiki-layout {
-      display: grid;
-      grid-template-columns: 290px 1fr;
-      gap: 2rem;
-      min-height: 600px;
+    /* ---------- Nawigacja (pływająca kapsuła) ---------- */
+    nav { position: sticky; top: max(12px, env(safe-area-inset-top)); z-index: 20; padding: 0 16px; }
+    .nav-inner {
+      max-width: 1024px; margin: 0 auto; height: 52px; border-radius: 999px;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 6px 0 16px;
     }
+    .brand { display: flex; align-items: center; gap: 8px; white-space: nowrap; font-weight: 600; font-size: 17px; letter-spacing: -0.022em; min-height: 44px; }
+    .brand img { width: 26px; height: 26px; }
+    .nav-links { display: flex; gap: 2px; font-size: 14px; letter-spacing: -0.016em; }
+    .nav-links a {
+      display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 999px;
+      color: var(--label-2); transition: background .2s, color .2s;
+    }
+    @media (hover: hover) { .nav-links a:hover { color: var(--label); background: rgba(127, 127, 127, 0.14); } }
 
-    @media (max-width: 860px) {
-      .wiki-layout { grid-template-columns: 1fr; }
+    /* Przełącznik wyglądu: przycisk + szklany panel z suwakiem (segmented control) */
+    .nav-links { align-items: center; }
+    .theme { position: relative; margin-left: 4px; }
+    .theme-btn {
+      width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--label);
+      background: rgba(127, 127, 127, 0.14); transition: background .2s, transform .3s var(--ease);
     }
+    .theme-btn svg { width: 20px; height: 20px; transition: transform .6s var(--ease); }
+    .theme-btn.spin svg { transform: rotate(360deg); }
+    @media (hover: hover) { .theme-btn:hover { background: rgba(127, 127, 127, 0.24); } }
+    .theme-btn:active { transform: scale(0.92); }
+    .theme-menu {
+      position: absolute; right: -6px; top: calc(100% + 14px); padding: 5px; border-radius: 26px;
+      transform: translateY(-8px) scale(.9); transform-origin: top right; opacity: 0; pointer-events: none;
+      transition: opacity .22s var(--ease-out), transform .5s var(--ease);
+    }
+    .theme.open .theme-menu { opacity: 1; pointer-events: auto; transform: none; }
+    .seg { --seg-i: 0; position: relative; display: grid; grid-template-columns: repeat(3, 84px); }
+    .seg button {
+      position: relative; z-index: 2; min-height: 64px; border-radius: 21px;
+      display: grid; place-items: center; align-content: center; gap: 4px;
+      font-size: 12px; font-weight: 500; letter-spacing: -0.005em; color: var(--label-2);
+      transition: color .35s var(--ease);
+    }
+    .seg button svg { width: 20px; height: 20px; transition: transform .5s cubic-bezier(.34, 1.56, .64, 1); }
+    .seg button[aria-checked="true"] { color: var(--label); font-weight: 600; }
+    .seg button[aria-checked="true"] svg { transform: scale(1.12); }
+    @media (hover: hover) { .seg button:hover { color: var(--label); } }
+    /* Kropla szkła przepływająca pod wybraną opcję */
+    .seg__thumb {
+      position: absolute; z-index: 1; inset: 0 auto 0 0; width: 84px; border-radius: 21px;   /* koncentryczne: 26 − 5 */
+      background: var(--thumb);
+      box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, .7), inset 0 -1px 0.5px var(--inner-lo), 0 4px 14px rgba(0, 0, 0, .16);
+      transform: translateX(calc(var(--seg-i) * 100%));
+      transition: transform .55s cubic-bezier(.34, 1.18, .64, 1);
+    }
+    .seg__thumb.squish { animation: squish .55s var(--ease); }
+    @keyframes squish { 35% { scale: 1.14 .9; } }
 
-    .wiki-sidebar {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      height: fit-content;
-    }
+    /* ---------- Hero ---------- */
+    .hero { text-align: center; padding: 20px 0 12px; }
 
-    .wiki-group { margin-bottom: 1.5rem; }
-    .wiki-group-title {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #ff9800;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+    /* ---------- Karuzela ikon ---------- */
+    .stage-wrap { overflow-x: clip; margin: 0 -22px; padding: 0 22px; }
+    .stage {
+      position: relative; height: 380px; margin: 6px auto 0;
+      perspective: 1400px; perspective-origin: 50% 40%;
+      touch-action: pan-y; user-select: none; -webkit-user-select: none;
     }
+    .slot {
+      position: absolute; left: 50%; top: 50%; width: 260px; height: 260px; margin: -130px 0 0 -130px;
+      transform-style: preserve-3d; cursor: pointer; border-radius: 40px;
+      transition: transform 1s var(--ease), filter 1s var(--ease), opacity 1s var(--ease);
+      will-change: transform, filter, opacity;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .slot .float { width: 100%; height: 100%; }
+    .slot.active { cursor: default; }
+    .slot.active .float { animation: bob 6s ease-in-out infinite; }
+    @keyframes bob { 50% { transform: translateY(-12px) rotate(-1.5deg); } }
+    .slot img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.35)); }
+    .slot::before {
+      content: ""; position: absolute; inset: 16%; border-radius: 50%; background: var(--orange);
+      filter: blur(60px); opacity: 0; transition: opacity 1s var(--ease); transform: translateZ(-1px);
+    }
+    .slot.active::before { opacity: 0.45; }
+    .floor {
+      position: absolute; left: 50%; bottom: 10px; width: 240px; height: 24px; margin-left: -120px;
+      background: radial-gradient(ellipse, rgba(0, 0, 0, 0.35), transparent 70%); filter: blur(6px);
+      animation: shadow 6s ease-in-out infinite;
+    }
+    @keyframes shadow { 50% { transform: scaleX(0.86); opacity: 0.7; } }
 
-    .wiki-list { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
-    .wiki-item-btn {
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-      padding: 0.5rem 0.75rem;
-      border-radius: var(--radius-sm);
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.9rem;
+    /* Kontrolka stron (page control) w szklanej kapsule */
+    .pager { display: inline-flex; align-items: center; padding: 0 6px; height: 30px; border-radius: 999px; margin: 2px 0 22px; }
+    .dot { position: relative; width: 22px; height: 30px; display: grid; place-items: center; transition: width .5s var(--ease); }
+    .dot i {
+      display: block; width: 7px; height: 7px; border-radius: 999px; background: var(--label-3);
+      transition: width .5s var(--ease), background .4s; position: relative; overflow: hidden;
     }
-    .wiki-item-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
-    .wiki-item-btn.active { background: rgba(255, 140, 0, 0.15); color: #ffb74d; font-weight: 600; }
+    .dot.active { width: 40px; }
+    .dot.active i { width: 28px; background: rgba(127, 127, 127, 0.3); }
+    .dot.active i::after {
+      content: ""; position: absolute; inset: 0; background: var(--label); border-radius: inherit; transform-origin: left;
+      animation: progress var(--autoplay, 5s) linear forwards;
+    }
+    .stage-wrap.paused .dot.active i::after { animation-play-state: paused; }
+    .no-autoplay .dot.active i::after { animation: none; transform: none; }
+    @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-    .markdown-body {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 2.5rem;
-      line-height: 1.7;
-    }
-    .markdown-body h1 { color: #ff9800; margin-bottom: 1rem; }
-    .markdown-body code { background: rgba(0,0,0,0.4); padding: 0.2rem 0.4rem; border-radius: 4px; color: #ffb74d; }
-    .markdown-body pre { background: #080c14; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+    /* ---------- Opis pod ikoną ---------- */
+    .info { min-height: 260px; display: grid; }
+    .info-inner { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; }
+    .info-inner > * { transition: opacity .45s var(--ease-out), transform .7s var(--ease), filter .45s; }
+    .info-inner.leave > * { opacity: 0; filter: blur(8px); transform: translateX(calc(var(--dir) * -36px)); }
+    .info-inner.enter > * { opacity: 0; filter: blur(8px); transform: translateX(calc(var(--dir) * 36px)); }
+    .info-inner > :nth-child(2) { transition-delay: .04s; }
+    .info-inner > :nth-child(3) { transition-delay: .08s; }
+    .info-inner > :nth-child(4) { transition-delay: .12s; }
 
-    /* Repozytoria */
-    .repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-    .repo-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
+    .info h1 { font-size: clamp(40px, 7vw, 64px); line-height: 1.0625; letter-spacing: -0.015em; font-weight: 700; }
+    .info h1 span { background: var(--title-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .meta { display: flex; gap: 6px 0; justify-content: center; flex-wrap: wrap; margin: 12px 0 10px; font-size: 14px; letter-spacing: -0.016em; color: var(--label-3); }
+    .meta .ver { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; color: var(--orange-text); font-weight: 600; align-self: center; }
+    .meta .soon { color: var(--label-2); }
+    .meta span + span::before { content: "·"; margin: 0 10px; color: var(--label-3); font-family: var(--font); }
+    .info p.desc { color: var(--label-2); font-size: 21px; line-height: 1.381; letter-spacing: 0.011em; max-width: 560px; margin-bottom: 26px; }
+
+    /* Przyciski — kapsuły, min. 44 pt */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 48px; padding: 0 24px; border-radius: 999px;
+      font-size: 17px; font-weight: 500; letter-spacing: -0.022em; white-space: nowrap;
     }
-    .repo-card a { color: #ffb74d; text-decoration: none; font-weight: 700; font-size: 1.15rem; }
+    .btn svg { width: 17px; height: 17px; flex: none; }
+    .btn.tinted { font-weight: 600; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    .files { position: relative; }
+    .files .chev { transition: transform .35s var(--ease); }
+    .files.open .chev { transform: rotate(180deg); }
+    .files-menu {
+      position: absolute; left: 50%; top: calc(100% + 10px); z-index: 30; width: min(380px, 88vw);
+      transform: translateX(-50%) translateY(-8px) scale(.94); transform-origin: top center; opacity: 0; pointer-events: none;
+      border-radius: 24px; padding: 6px; text-align: left;
+      transition: opacity .25s var(--ease-out), transform .5s var(--ease);
+    }
+    .files.open .files-menu { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0) scale(1); }
+    .files-menu a {
+      display: flex; justify-content: space-between; gap: 12px; align-items: center;
+      min-height: 52px; padding: 6px 14px; border-radius: 18px;   /* koncentryczne: 24 − 6 */
+      font-size: 15px; letter-spacing: -0.01em; color: var(--label);
+    }
+    .files-menu a + a { box-shadow: 0 -0.5px 0 var(--separator); }
+    @media (hover: hover) { .files-menu a:hover { background: rgba(127, 127, 127, 0.16); box-shadow: none; } }
+    .files-menu .name { overflow: hidden; min-width: 0; }
+    .files-menu .name small { display: block; font-size: 12px; color: var(--label-3); font-family: var(--font-mono); letter-spacing: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .files-menu .size { color: var(--label-3); font-size: 13px; white-space: nowrap; }
+
+    /* ---------- Wszystkie aplikacje: karty Liquid Glass ---------- */
+    .apps-section { margin-top: 72px; scroll-margin-top: 90px; }
+    .section-head { text-align: center; margin-bottom: 30px; }
+    .section-head h2 { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; font-weight: 700; letter-spacing: -0.003em; }
+    .section-head p { color: var(--label-2); font-size: 19px; margin-top: 8px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 22px; }
+    .card { border-radius: 34px; padding: 26px; display: flex; flex-direction: column; gap: 18px; }
+    @media (hover: hover) { .card:hover { transform: translateY(-4px); } }
+    .card__header { display: flex; align-items: center; gap: 14px; }
+    .card__icon { flex: none; width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .25)); }
+    .card__eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; color: var(--orange-text); }
+    .card__eyebrow.soon { color: var(--label-3); }
+    .card__title { font-size: 24px; line-height: 1.17; font-weight: 700; letter-spacing: 0.009em; }
+    .card__body { flex: 1; color: var(--label-2); font-size: 16px; line-height: 1.5; }
+    .card__stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; list-style: none;
+      padding: 12px 4px; border-radius: 20px; background: var(--fill);   /* koncentryczne: 34 − 14 */
+    }
+    .card__stats li { min-width: 0; padding: 0 4px; }
+    .card__stats li + li { border-left: 0.5px solid var(--separator); }
+    .card__stats strong { display: block; font-size: 15px; letter-spacing: -0.01em; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .card__stats span { font-size: 12px; color: var(--label-3); }
+    .card__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .card__actions .btn { flex: 1 1 auto; min-height: 44px; padding: 0 18px; font-size: 16px; }
+
+    /* ---------- O nas ---------- */
+    .about { margin-top: 64px; border-radius: 34px; padding: 36px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+    .about h2 { font-size: 28px; line-height: 1.143; letter-spacing: 0.007em; font-weight: 700; margin-bottom: 10px; }
+    .about p { color: var(--label-2); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-self: center; }
+    .stat { text-align: center; }
+    .stat b { display: block; font-size: 40px; line-height: 1.1; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+    .stat small { color: var(--label-3); font-size: 13px; }
+
+    .error { border-radius: 22px; padding: 18px 22px; color: var(--label); margin-top: 30px; }
+
+    .site-footer { margin: 64px 0 max(28px, env(safe-area-inset-bottom)); }
+    .site-footer .glass { border-radius: 999px; padding: 0 22px; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; color: var(--label-3); font-size: 12px; letter-spacing: -0.01em; }
+    @media (hover: hover) { .site-footer a:hover { color: var(--label); text-decoration: underline; } }
+
+    @media (max-width: 734px) {   /* breakpoint "small" z apple.com */
+      .stage { height: 300px; }
+      .slot { width: 190px; height: 190px; margin: -95px 0 0 -95px; border-radius: 30px; }
+      .info p.desc { font-size: 19px; }
+      .nav-links a { padding: 0 8px; }
+      .nav-inner { padding-left: 12px; }
+      .nav-links a.hide-sm { display: none; }
+      .about { padding: 26px; border-radius: 28px; }
+      .site-footer .glass { border-radius: 22px; padding: 12px 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .blob, .float, .floor, .seg__thumb { animation: none !important; }
+      .slot, .info-inner > *, .glass { transition-duration: .01s !important; }
+    }
   </style>
 </head>
 <body>
+  <!-- Filtry refrakcji Liquid Glass generowane przez skrypt -->
+  <svg id="lg-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs></defs></svg>
 
-  <header>
-    <div class="nav-container">
-      <a href="#" class="brand" onclick="switchTab('home'); return false;">
-        <div class="brand-logo-mini">
-          <img src="./assets/icon.svg" alt="Mango Labz Logo" />
+  <div class="bg" aria-hidden="true">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+  </div>
+
+  <nav aria-label="Główna nawigacja">
+    <div class="nav-inner glass">
+      <a class="brand" href="#"><img src="https://github.com/MangoLabz.png?size=96" onerror="this.onerror=null;this.src='icons/team.png'" alt=""> Mango Labz</a>
+      <div class="nav-links">
+        <a href="#wszystkie">Aplikacje</a>
+        <a href="#o-nas" class="hide-sm">O nas</a>
+        <a href="https://github.com/MangoLabz" target="_blank" rel="noopener">GitHub</a>
+        <div class="theme">
+          <button class="theme-btn" id="theme-btn" aria-label="Wygląd" aria-haspopup="true" aria-expanded="false"></button>
+          <div class="theme-menu glass" id="theme-menu">
+            <div class="seg" id="seg" role="radiogroup" aria-label="Wygląd">
+              <span class="seg__thumb" id="seg-thumb" aria-hidden="true"></span>
+              <button role="radio" data-theme-set="auto"><span data-ico="auto"></span>Auto</button>
+              <button role="radio" data-theme-set="light"><span data-ico="light"></span>Jasny</button>
+              <button role="radio" data-theme-set="dark"><span data-ico="dark"></span>Ciemny</button>
+            </div>
+          </div>
         </div>
-        <div class="brand-text">Mango <span>Labz</span></div>
-      </a>
-
-      <button class="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">☰</button>
-
-      <div class="nav-actions" id="nav-actions">
-        <nav class="tabs">
-          <button class="tab-btn active" id="btn-tab-home" onclick="switchTab('home')">🏠 Główna</button>
-          <button class="tab-btn" id="btn-tab-wiki" onclick="switchTab('wiki')">📚 Wiki</button>
-          <button class="tab-btn" id="btn-tab-repos" onclick="switchTab('repos')">📦 Repozytoria</button>
-        </nav>
-        <a href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer" class="github-link-btn">GitHub</a>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <main>
-    <!-- GŁÓWNA -->
-    <section id="tab-home" class="tab-content active">
-      <div class="hero-section">
-        <a id="project-badge-link" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer" class="project-display-badge">
-          <span class="pulse-dot"></span>
-          <span class="project-tag">Projekt</span>
-          <span class="project-name-text" id="project-title">Mango-Convert</span>
-        </a>
-
-        <!-- Slajdy ładujące pliki SVG z /assets/ -->
-        <div class="carousel-container">
-          <div class="hero-logo-glow"></div>
-
-          <!-- Slide 1: Mango-Convert -->
-          <a class="svg-slide active" data-index="0" data-name="Mango-Convert" href="https://github.com/open-mangos/Mango-Convert" target="_blank" rel="noopener noreferrer">
-            <img src="./assets/icon-convert.svg" alt="Mango-Convert" />
-          </a>
-
-          <!-- Slide 2: Mango-Cam -->
-          <a class="svg-slide" data-index="1" data-name="Mango-Cam" href="https://github.com/open-mangos/Mango-Cam" target="_blank" rel="noopener noreferrer">
-            <img src="./assets/icon-cam.svg" alt="Mango-Cam" />
-          </a>
-
-          <!-- Slide 3: Mango Labz Core -->
-          <a class="svg-slide" data-index="2" data-name="Mango Labz Core" href="https://github.com/open-mangos" target="_blank" rel="noopener noreferrer">
-            <img src="./assets/icon-core.svg" alt="Mango Labz Core" />
-          </a>
+  <main class="wrap">
+    <header class="hero" id="aplikacje">
+      <div class="stage-wrap" id="stage-wrap" role="region" aria-roledescription="karuzela" aria-label="Aplikacje Mango Labz">
+        <div class="stage" id="stage">
+          <div class="floor" aria-hidden="true"></div>
         </div>
-
-        <div class="carousel-indicators">
-          <div class="carousel-dot active" onclick="setSlide(0)"></div>
-          <div class="carousel-dot" onclick="setSlide(1)"></div>
-          <div class="carousel-dot" onclick="setSlide(2)"></div>
-        </div>
-
-        <h1 class="hero-title">
-          <span class="main-brand">Mango Labz</span>
-          <span class="highlight-text">Otwórz sie na nas!</span>
-        </h1>
-
-        <p class="hero-desc">Open-Source projekty które pomogą ci w tym cyfrowym świecie.</p>
-
-        <div class="hero-buttons">
-          <button class="btn-primary" onclick="switchTab('wiki')">📖 Przejdź do Wiki</button>
-          <button class="btn-secondary" onclick="switchTab('repos')">📦 Nasze Repozytoria</button>
-        </div>
+        <div class="pager glass" id="dots" role="tablist" aria-label="Wybierz aplikację" hidden></div>
       </div>
+
+      <div class="info" id="info" aria-live="polite"></div>
+    </header>
+
+    <section class="apps-section" id="wszystkie" aria-labelledby="apps-title">
+      <div class="section-head">
+        <h2 id="apps-title">Wszystkie aplikacje</h2>
+        <p>Darmowe i otwarte. Wybierz, pobierz, gotowe.</p>
+      </div>
+      <div class="cards" id="cards"></div>
     </section>
 
-    <!-- WIKI -->
-    <section id="tab-wiki" class="tab-content">
-      <div class="wiki-layout">
-        <aside class="wiki-sidebar">
-          <div id="wiki-menu"></div>
-        </aside>
-        <article class="markdown-body" id="wiki-viewer">
-          <p>Wybierz dokument...</p>
-        </article>
+    <section class="about glass" id="o-nas">
+      <div>
+        <h2>O Mango Labz</h2>
+        <p>Mały zespół tworzący przydatne, darmowe aplikacje open-source. Każdy nowy projekt na GitHubie MangoLabz pojawia się tutaj automatycznie.</p>
       </div>
-    </section>
-
-    <!-- REPOZYTORIA -->
-    <section id="tab-repos" class="tab-content">
-      <div class="repo-grid" id="repos-container"></div>
+      <div class="stats">
+        <div class="stat"><b id="stat-apps">–</b><small>Aplikacje</small></div>
+        <div class="stat"><b id="stat-dl">–</b><small>Pobrania</small></div>
+        <div class="stat"><b id="stat-stars">–</b><small>Gwiazdki</small></div>
+      </div>
     </section>
   </main>
 
+  <footer class="site-footer wrap">
+    <div class="glass">
+      <span>Copyright © <span id="year"></span> Mango Labz. Wszelkie prawa zastrzeżone.</span>
+      <a href="https://github.com/MangoLabz" target="_blank" rel="noopener">github.com/MangoLabz</a>
+    </div>
+  </footer>
+
   <script>
-    // Nawigacja mobilna
-    function toggleMenu() {
-      document.getElementById("nav-actions").classList.toggle("open");
-    }
+    const ORG = "MangoLabz";
+    // Repozytoria, których nie pokazujemy (np. sama strona)
+    const HIDDEN = [`${ORG.toLowerCase()}.github.io`];
+    // Opcjonalne opisy — nowe repo działa i bez wpisu tutaj (wtedy bierze opis z GitHuba)
+    const EXTRA = {
+      "Mango-Bot-Builder": { desc: "Wizualny kreator botów Discord. Zbuduj bota z bloków, bez pisania kodu." },
+      "Mango-Convert":     { desc: "Szybki konwerter plików. Obrazy, audio, wideo i więcej." },
+      "Mango-Cam":         { desc: "Użyj telefonu jako kamery w komputerze." },
+    };
+    // Gdzie szukać ikony w repo (po kolei). Najpierw lokalna kopia w icons/<repo>.png
+    const ICON_PATHS = ["build/icons/512x512.png", "build/icons/icon.png", "images/image.png", "icon.png", "icon.svg", "assets/icon.png", "build/icon.png"];
+    const FALLBACK_ICON = "icons/team.png";
+    const AUTOPLAY_MS = 5000;
+    const CACHE_KEY = "mango-apps-v2";
+    const CACHE_TTL = 10 * 60 * 1000; // 10 min — GitHub pozwala na 60 zapytań/h bez logowania
 
-    function switchTab(tabId) {
-      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+    const $ = (id) => document.getElementById(id);
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    $("year").textContent = new Date().getFullYear();
+    document.documentElement.style.setProperty("--autoplay", AUTOPLAY_MS + "ms");
 
-      const targetBtn = document.getElementById(`btn-tab-${tabId}`);
-      if (targetBtn) targetBtn.classList.add("active");
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const fmtSize = (b) => b > 1048576 ? (b / 1048576).toFixed(1).replace(".", ",") + " MB" : Math.round(b / 1024) + " KB";
+    const fmtNum = (n) => new Intl.NumberFormat("pl").format(n);
 
-      const targetSection = document.getElementById(`tab-${tabId}`);
-      if (targetSection) targetSection.classList.add("active");
+    const ICON = {
+      download: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v10M5.5 8.5 10 13l4.5-4.5M4 17h12"/></svg>`,
+      chevron:  `<svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.5 8 4.5 4.5L14.5 8"/></svg>`,
+      code:     `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 6-4 4 4 4M13 6l4 4-4 4"/></svg>`,
+      external: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4H4v12h12v-4M11 3h6v6M17 3l-8 8"/></svg>`,
+    };
 
-      document.getElementById("nav-actions").classList.remove("open");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    // Karuzela
-    let currentSlide = 0;
-    const slides = document.querySelectorAll(".svg-slide");
-    const dots = document.querySelectorAll(".carousel-dot");
-    const titleEl = document.getElementById("project-title");
-    const badgeLink = document.getElementById("project-badge-link");
-
-    function setSlide(index) {
-      if (!slides[index]) return;
-      slides.forEach(s => s.classList.remove("active"));
-      dots.forEach(d => d.classList.remove("active"));
-
-      currentSlide = index;
-      slides[currentSlide].classList.add("active");
-      dots[currentSlide].classList.add("active");
-
-      titleEl.textContent = slides[currentSlide].getAttribute("data-name");
-      badgeLink.href = slides[currentSlide].getAttribute("href");
-    }
-
-    setInterval(() => {
-      setSlide((currentSlide + 1) % slides.length);
-    }, 4000);
-
-    /* ========================================================
-       WIKI: POGRUPOWANE NA PODFOLDERY
-       ======================================================== */
-    const wikiStructure = [
-      {
-        repoName: "Mango-Convert",
-        folder: "mango-convert",
-        posts: [
-          { file: "intro.md", title: "Wprowadzenie i formaty" },
-          { file: "uzycie.md", title: "Instrukcja użycia" }
-        ]
-      },
-      {
-        repoName: "Mango-Cam",
-        folder: "mango-cam",
-        posts: [
-          { file: "konfiguracja.md", title: "Konfiguracja kamery" },
-          { file: "api.md", title: "Protokół i endpointy" }
-        ]
-      },
-      {
-        repoName: "Open-Mangos Core",
-        folder: "core",
-        posts: [
-          { file: "instalacja.md", title: "Kompilacja silnika" },
-          { file: "baza.md", title: "Zarządzanie bazą danych" }
-        ]
+    function timeAgo(iso) {
+      const s = (Date.now() - new Date(iso)) / 1000;
+      const rtf = new Intl.RelativeTimeFormat("pl", { numeric: "auto" });
+      for (const [unit, sec] of [["year", 31536000], ["month", 2592000], ["week", 604800], ["day", 86400], ["hour", 3600], ["minute", 60]]) {
+        if (s >= sec) return rtf.format(-Math.floor(s / sec), unit);
       }
+      return "przed chwilą";
+    }
+
+    const OS = [
+      { key: "windows", label: "Windows", test: (n) => /\.(exe|msi|msix)$/.test(n) || /win/.test(n) },
+      { key: "mac",     label: "macOS",   test: (n) => /\.(dmg|pkg)$/.test(n) || /mac|darwin/.test(n) },
+      { key: "android", label: "Android", test: (n) => /\.apk$/.test(n) },
+      { key: "linux",   label: "Linux",   test: (n) => /\.(rpm|deb|appimage|tar\.gz|snap|flatpak)$/.test(n) || /linux/.test(n) },
     ];
+    const osOf = (name) => OS.find((o) => o.test(name.toLowerCase())) || { key: "other", label: "Inne" };
+    const fileKind = (name) => (name.match(/\.(tar\.gz|appimage|flatpak|[a-z0-9]+)$/i) || ["", "plik"])[1].toUpperCase();
+    const ua = navigator.userAgent.toLowerCase();
+    const myOS = /android/.test(ua) ? "android" : /windows/.test(ua) ? "windows" : /mac os/.test(ua) ? "mac" : /linux/.test(ua) ? "linux" : null;
 
-    function initWiki() {
-      const menu = document.getElementById("wiki-menu");
-      menu.innerHTML = "";
-      let firstLoad = true;
+    function iconSources(p) {
+      const raw = `https://raw.githubusercontent.com/${ORG}/${p.name}/${p.branch}/`;
+      return [`icons/${p.name}.png`, ...ICON_PATHS.map((x) => raw + x), FALLBACK_ICON];
+    }
+    // Próbuje kolejnych ścieżek, aż któraś się załaduje
+    window.nextIcon = (img) => {
+      const list = JSON.parse(img.dataset.src);
+      const i = +img.dataset.i + 1;
+      if (i < list.length) { img.dataset.i = i; img.src = list[i]; } else img.onerror = null;
+    };
 
-      wikiStructure.forEach(group => {
-        const grpEl = document.createElement("div");
-        grpEl.className = "wiki-group";
-        grpEl.innerHTML = `<div class="wiki-group-title">📁 ${group.repoName}</div>`;
+    /* =========================================================
+       Liquid Glass — refrakcja krawędzi
+       Dla każdego elementu .glass generujemy mapę przemieszczeń
+       (canvas) w kształcie jego zaokrąglonego prostokąta: im bliżej
+       krawędzi, tym mocniej tło jest "zaginane" jak w soczewce.
+       Działa w przeglądarkach Chromium; reszta dostaje matowe szkło.
+       ========================================================= */
+    const Glass = (() => {
+      const canRefract = !!navigator.userAgentData
+        && CSS.supports("backdrop-filter", "url(#x)")
+        && !matchMedia("(prefers-reduced-transparency: reduce)").matches;
+      const defs = document.querySelector("#lg-defs defs");
+      const NS = "http://www.w3.org/2000/svg";
+      let seq = 0;
 
-        const ul = document.createElement("ul");
-        ul.className = "wiki-list";
+      function radiusOf(el, w, h) {
+        const r = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
+        return Math.min(r, w / 2, h / 2);
+      }
 
-        group.posts.forEach(post => {
-          const li = document.createElement("li");
-          const btn = document.createElement("button");
-          btn.className = "wiki-item-btn";
-          btn.textContent = post.title;
-          const relativePath = `./wiki/post/${group.folder}/${post.file}`;
-
-          btn.onclick = () => loadMarkdown(relativePath, btn);
-          li.appendChild(btn);
-          ul.appendChild(li);
-
-          if (firstLoad) {
-            btn.classList.add("active");
-            loadMarkdown(relativePath, btn);
-            firstLoad = false;
+      function displacementMap(w, h, r) {
+        const s = 0.5;                                     // pół rozdzielczości wystarczy
+        const W = Math.max(2, Math.round(w * s)), H = Math.max(2, Math.round(h * s));
+        const c = document.createElement("canvas");
+        c.width = W; c.height = H;
+        const ctx = c.getContext("2d");
+        const img = ctx.createImageData(W, H);
+        const d = img.data;
+        const band = Math.min(Math.max(r, 14), Math.min(w, h) / 2);   // szerokość "soczewki"
+        const hw = w / 2, hh = h / 2;
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            const px = (x + 0.5) / s - hw, py = (y + 0.5) / s - hh;
+            const qx = Math.abs(px) - (hw - r), qy = Math.abs(py) - (hh - r);
+            let dist, nx, ny;
+            if (qx > 0 && qy > 0) { const l = Math.hypot(qx, qy); dist = l - r; nx = qx / l; ny = qy / l; }
+            else if (qx > qy)     { dist = qx - r; nx = 1; ny = 0; }
+            else                  { dist = qy - r; nx = 0; ny = 1; }
+            nx *= Math.sign(px) || 1; ny *= Math.sign(py) || 1;
+            const t = Math.max(0, -dist);                  // głębokość od krawędzi
+            const k = t < band ? Math.pow(1 - t / band, 2.2) : 0;
+            const i = (y * W + x) * 4;
+            d[i]     = 128 - nx * k * 127;                 // R → przesunięcie X (do środka)
+            d[i + 1] = 128 - ny * k * 127;                 // G → przesunięcie Y
+            d[i + 2] = 128;
+            d[i + 3] = 255;
           }
-        });
+        }
+        ctx.putImageData(img, 0, 0);
+        return c.toDataURL();
+      }
 
-        grpEl.appendChild(ul);
-        menu.appendChild(grpEl);
+      function update(el) {
+        const w = el.offsetWidth, h = el.offsetHeight;
+        if (!w || !h) return;
+        const key = w + "x" + h;
+        if (el.dataset.lgKey === key) return;
+        el.dataset.lgKey = key;
+        const r = radiusOf(el, w, h);
+        const id = el.dataset.lgId || (el.dataset.lgId = "lg-" + (++seq));
+        let f = document.getElementById(id);
+        if (!f) {
+          f = document.createElementNS(NS, "filter");
+          f.id = id;
+          f.setAttribute("x", "0"); f.setAttribute("y", "0");
+          f.setAttribute("width", "100%"); f.setAttribute("height", "100%");
+          f.setAttribute("color-interpolation-filters", "sRGB");
+          f.innerHTML = `<feImage result="map" x="0" y="0" preserveAspectRatio="none"/>
+            <feDisplacementMap in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G"/>`;
+          defs.appendChild(f);
+        }
+        const im = f.querySelector("feImage");
+        im.setAttribute("href", displacementMap(w, h, r));
+        im.setAttribute("width", w); im.setAttribute("height", h);
+        const strength = Math.min(Math.max(r, 14) * 1.1, 48);
+        f.querySelector("feDisplacementMap").setAttribute("scale", strength);
+        const bf = `blur(var(--glass-blur)) url(#${id}) saturate(var(--glass-sat)) brightness(var(--glass-bright))`;
+        el.style.webkitBackdropFilter = bf;
+        el.style.backdropFilter = bf;
+      }
+
+      const ro = canRefract ? new ResizeObserver((entries) => entries.forEach((e) => update(e.target))) : null;
+
+      function apply(root = document) {
+        if (!canRefract) return;
+        root.querySelectorAll(".glass:not([data-lg-on])").forEach((el) => {
+          el.dataset.lgOn = "";
+          ro.observe(el);
+        });
+        // usuń filtry elementów, których już nie ma
+        defs.querySelectorAll("filter").forEach((f) => {
+          if (!document.querySelector(`[data-lg-id="${f.id}"]`)) f.remove();
+        });
+      }
+      return { apply, enabled: canRefract };
+    })();
+
+    function readCache() {
+      try { const c = JSON.parse(localStorage.getItem(CACHE_KEY)); return c && Array.isArray(c.data) ? c : null; } catch { return null; }
+    }
+    function writeCache(data) {
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ time: Date.now(), data })); } catch {}
+    }
+
+    async function gh(path) {
+      const res = await fetch(`https://api.github.com/${path}`, { headers: { Accept: "application/vnd.github+json" } });
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
+      return res.json();
+    }
+
+    async function fetchProjects() {
+      const repos = await gh(`orgs/${ORG}/repos?per_page=100&sort=pushed`);
+      const visible = repos.filter((r) => !r.archived && !r.private && !HIDDEN.includes(r.name.toLowerCase()));
+      return Promise.all(visible.map(async (r) => {
+        let release = null;
+        try { release = await gh(`repos/${ORG}/${r.name}/releases/latest`); } catch {}
+        return {
+          name: r.name, url: r.html_url, description: r.description, homepage: r.homepage, branch: r.default_branch,
+          stars: r.stargazers_count, pushed: r.pushed_at,
+          release: release && {
+            tag: release.tag_name, url: release.html_url, published: release.published_at,
+            assets: (release.assets || []).map((a) => ({ name: a.name, url: a.browser_download_url, size: a.size, downloads: a.download_count })),
+          },
+        };
+      }));
+    }
+
+    /* ================= Karuzela ================= */
+    let apps = [];
+    let current = 0;
+    let timer = null;
+    let paused = false;
+
+    // Pozycja ikony względem aktywnej: środek z przodu, reszta mniejsza, rozmyta i z tyłu
+    function placeSlots() {
+      const n = apps.length;
+      const step = innerWidth < 735 ? 150 : 280;
+      document.querySelectorAll(".slot").forEach((el, i) => {
+        let d = i - current;
+        if (d > n / 2) d -= n;
+        if (d < -n / 2) d += n;
+        if (n === 2 && d === -1) d = 1;
+        const a = Math.abs(d);
+        const x = Math.sign(d) * (a === 0 ? 0 : step + (a - 1) * step * 0.55);
+        el.style.transform = `translateX(${x}px) translateZ(${-a * 260}px) rotateY(${-d * 28}deg) scale(${a ? 0.78 : 1})`;
+        el.style.filter = a ? `blur(${2 + a * 3}px) saturate(${1 - a * 0.2}) brightness(${1 - a * 0.15})` : "none";
+        el.style.opacity = a > 2 ? 0 : a ? 0.85 - a * 0.2 : 1;
+        el.style.zIndex = 10 - a;
+        el.classList.toggle("active", a === 0);
+        el.setAttribute("aria-hidden", a !== 0);
+      });
+      document.querySelectorAll(".dot").forEach((d, i) => {
+        const on = i === current;
+        d.setAttribute("aria-selected", on);
+        d.tabIndex = on ? 0 : -1;
+        d.classList.remove("active");
+        if (on) { void d.offsetWidth; d.classList.add("active"); }   // restart paska postępu
       });
     }
 
-    async function loadMarkdown(path, btn) {
-      const viewer = document.getElementById("wiki-viewer");
-      document.querySelectorAll(".wiki-item-btn").forEach(b => b.classList.remove("active"));
-      if (btn) btn.classList.add("active");
+    function infoHTML(p) {
+      const rel = p.release;
+      const assets = rel ? rel.assets : [];
+      const best = assets.find((a) => osOf(a.name).key === myOS) || assets[0];
+      const bestOS = best && osOf(best.name);
+      const downloads = assets.reduce((s, a) => s + a.downloads, 0);
+      const platforms = [...new Set(assets.map((a) => osOf(a.name).label))].join(", ");
+      const [first, ...rest] = p.name.split(/[-_]/);
+      const title = rest.length ? `${esc(first)} <span>${esc(rest.join(" "))}</span>` : `<span>${esc(first)}</span>`;
+      const multiOS = new Set(assets.map((a) => osOf(a.name).key)).size > 1;
 
-      try {
-        const res = await fetch(path);
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Brak pliku ${path}`);
-        viewer.innerHTML = marked.parse(await res.text());
-      } catch (err) {
-        viewer.innerHTML = `<h3>Błąd wczytywania</h3><p style="color:#ef4444">${err.message}</p>`;
+      let actions = "";
+      if (best) {
+        actions += `<a class="btn glass tinted interactive" href="${esc(best.url)}">${ICON.download} Pobierz${bestOS.key !== "other" ? " dla " + bestOS.label : ""}</a>`;
+        if (assets.length > 1) actions += `
+          <div class="files">
+            <button class="btn glass interactive" data-files aria-expanded="false" aria-haspopup="true">${multiOS ? "Inne systemy" : "Wszystkie pliki"} ${ICON.chevron}</button>
+            <div class="files-menu glass" role="menu">
+              ${assets.map((a) => `<a role="menuitem" href="${esc(a.url)}"><span class="name">${osOf(a.name).label} · ${fileKind(a.name)}<small>${esc(a.name)}</small></span><span class="size">${fmtSize(a.size)}</span></a>`).join("")}
+            </div>
+          </div>`;
+      } else if (rel) {
+        actions += `<a class="btn glass tinted interactive" href="${esc(rel.url)}" target="_blank" rel="noopener">Zobacz wydanie ${ICON.external}</a>`;
       }
+      actions += `<a class="btn glass interactive" href="${esc(p.url)}" target="_blank" rel="noopener">${ICON.code} Kod źródłowy</a>`;
+      if (p.homepage) actions += `<a class="btn glass interactive" href="${esc(p.homepage)}" target="_blank" rel="noopener">Strona ${ICON.external}</a>`;
+
+      return `
+        <h1>${title}</h1>
+        <div class="meta">
+          ${rel ? `<span class="ver">${esc(rel.tag)}</span>` : `<span class="soon">W przygotowaniu</span>`}
+          ${platforms ? `<span>${esc(platforms)}</span>` : ""}
+          ${downloads ? `<span>${fmtNum(downloads)} pobrań</span>` : ""}
+          <span>Zaktualizowano ${timeAgo(rel ? rel.published : p.pushed)}</span>
+        </div>
+        <p class="desc">${esc((EXTRA[p.name] || {}).desc || p.description || "")}</p>
+        <div class="actions">${actions}</div>`;
     }
 
-    // Repozytoria
-    async function loadRepos() {
-      const container = document.getElementById("repos-container");
-      try {
-        const res = await fetch("https://api.github.com/orgs/open-mangos/repos");
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        container.innerHTML = data.map(r => `
-          <div class="repo-card">
-            <a href="${r.html_url}" target="_blank">${r.name}</a>
-            <p style="color:#94a3b8; margin-top:0.5rem;">${r.description || "Brak opisu."}</p>
-          </div>
-        `).join("");
-      } catch {
-        container.innerHTML = `
-          <div class="repo-card"><a href="https://github.com/open-mangos/Mango-Convert" target="_blank">Mango-Convert</a><p style="color:#94a3b8; margin-top:0.5rem;">Narzędzie do automatycznej konwersji i migracji formatów plików.</p></div>
-          <div class="repo-card"><a href="https://github.com/open-mangos/Mango-Cam" target="_blank">Mango-Cam</a><p style="color:#94a3b8; margin-top:0.5rem;">Moduł do rejestracji i manipulacji widokiem kamery.</p></div>
-        `;
-      }
+    // Płynna zamiana opisu: stary odjeżdża w jedną stronę, nowy wjeżdża z drugiej
+    function showInfo(dir = 1, instant = false) {
+      const box = $("info");
+      const next = document.createElement("div");
+      next.className = "info-inner" + (instant ? "" : " enter");
+      next.style.setProperty("--dir", dir);
+      next.innerHTML = infoHTML(apps[current]);
+      box.querySelectorAll(".info-inner").forEach((old) => {
+        old.style.setProperty("--dir", dir);
+        old.classList.add("leave");
+        old.style.pointerEvents = "none";
+        old.setAttribute("aria-hidden", "true");
+        setTimeout(() => { old.remove(); Glass.apply(); }, 700);
+      });
+      box.appendChild(next);
+      Glass.apply(next);
+      if (!instant) requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove("enter")));
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      initWiki();
-      loadRepos();
+    function go(index, dir) {
+      const n = apps.length;
+      if (!n) return;
+      const target = (index + n) % n;
+      if (target === current) return;
+      if (dir === undefined) {
+        let d = target - current;
+        if (d > n / 2) d -= n;
+        if (d < -n / 2) d += n;
+        dir = Math.sign(d) || 1;
+      }
+      current = target;
+      placeSlots();
+      showInfo(dir);
+      restartAutoplay();
+    }
+
+    function restartAutoplay() {
+      clearInterval(timer);
+      const off = reduceMotion.matches || apps.length < 2;
+      $("stage-wrap").classList.toggle("no-autoplay", off);
+      if (!off) timer = setInterval(() => { if (!paused && !document.hidden) go(current + 1, 1); }, AUTOPLAY_MS);
+    }
+    function setPaused(v) { paused = v; $("stage-wrap").classList.toggle("paused", v); }
+
+    let lastSignature = "";
+    function buildCarousel(list) {
+      // Nie przebudowuj, jeśli nic się nie zmieniło (np. przy odświeżeniu w tle)
+      const signature = JSON.stringify(list);
+      if (signature === lastSignature) return;
+      lastSignature = signature;
+      const keepName = apps[current] && apps[current].name;
+      apps = list;
+      const idx = apps.findIndex((p) => p.name === keepName);
+      current = idx >= 0 ? idx : 0;
+
+      const stage = $("stage");
+      stage.querySelectorAll(".slot").forEach((s) => s.remove());
+      apps.forEach((p, i) => {
+        const srcs = iconSources(p);
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        slot.innerHTML = `<div class="float"><img src="${esc(srcs[0])}" data-src='${esc(JSON.stringify(srcs))}' data-i="0" onerror="nextIcon(this)" alt="${esc(p.name.replace(/[-_]/g, " "))}" draggable="false"></div>`;
+        slot.addEventListener("click", () => go(i));
+        stage.appendChild(slot);
+      });
+      const dots = $("dots");
+      dots.innerHTML = apps.map((p, i) => `<button class="dot" role="tab" aria-label="${esc(p.name.replace(/[-_]/g, " "))}" data-dot="${i}"><i></i></button>`).join("");
+      dots.hidden = apps.length < 2;
+
+      placeSlots();
+      showInfo(1, true);
+      restartAutoplay();
+      Glass.apply();
+    }
+
+    /* ================= Karty "Wszystkie aplikacje" ================= */
+    function cardHTML(p, i) {
+      const rel = p.release;
+      const assets = rel ? rel.assets : [];
+      const best = assets.find((a) => osOf(a.name).key === myOS) || assets[0];
+      const downloads = assets.reduce((s, a) => s + a.downloads, 0);
+      const platforms = [...new Set(assets.map((a) => osOf(a.name).label))].join(", ");
+      const srcs = iconSources(p);
+      const name = p.name.replace(/[-_]/g, " ");
+      const primary = best
+        ? `<a class="btn glass tinted interactive" href="${esc(best.url)}">${ICON.download} Pobierz</a>`
+        : `<a class="btn glass interactive" href="${esc(p.url)}" target="_blank" rel="noopener">${ICON.code} Kod</a>`;
+      return `
+        <article class="card glass" aria-labelledby="card-${i}">
+          <header class="card__header">
+            <img class="card__icon" src="${esc(srcs[0])}" data-src='${esc(JSON.stringify(srcs))}' data-i="0" onerror="nextIcon(this)" alt="" width="60" height="60" loading="lazy">
+            <div>
+              <p class="card__eyebrow${rel ? "" : " soon"}">${rel ? "Gotowa do pobrania" : "W przygotowaniu"}</p>
+              <h3 class="card__title" id="card-${i}">${esc(name)}</h3>
+            </div>
+          </header>
+          <p class="card__body">${esc((EXTRA[p.name] || {}).desc || p.description || "")}</p>
+          <ul class="card__stats" aria-label="Szczegóły">
+            <li><strong>${rel ? esc(rel.tag) : "—"}</strong><span>Wersja</span></li>
+            <li><strong>${platforms ? esc(platforms) : "—"}</strong><span>System</span></li>
+            <li><strong>${fmtNum(downloads)}</strong><span>Pobrania</span></li>
+          </ul>
+          <footer class="card__actions">
+            ${primary}
+            <button class="btn glass interactive" data-show="${i}">Szczegóły</button>
+          </footer>
+        </article>`;
+    }
+    let lastCards = "";
+    function renderCards(list) {
+      const html = list.map(cardHTML).join("");
+      if (html === lastCards) return;
+      lastCards = html;
+      $("cards").innerHTML = html;
+      Glass.apply($("cards"));
+    }
+    // "Szczegóły" — przewiń do karuzeli i pokaż tę aplikację
+    $("cards").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-show]");
+      if (!b) return;
+      scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" });
+      go(+b.dataset.show);
     });
+
+    /* ================= Render ================= */
+    function render(projects, cacheTime) {
+      // Gotowe (z wydaniem) najpierw, potem w przygotowaniu
+      const ready = projects.filter((p) => p.release).sort((a, b) => new Date(b.release.published) - new Date(a.release.published));
+      const soon = projects.filter((p) => !p.release).sort((a, b) => new Date(b.pushed) - new Date(a.pushed));
+      const list = [...ready, ...soon];
+
+      if (list.length) { buildCarousel(list); renderCards(list); }
+      else $("info").innerHTML = `<div class="info-inner"><h1>Wkrótce</h1></div>`;
+
+      $("stat-apps").textContent = fmtNum(projects.length);
+      $("stat-dl").textContent = fmtNum(ready.reduce((s, p) => s + p.release.assets.reduce((t, a) => t + a.downloads, 0), 0));
+      $("stat-stars").textContent = fmtNum(projects.reduce((s, p) => s + p.stars, 0));
+
+    }
+
+    /* ================= Interakcje ================= */
+    // Kontrolka stron: klik + strzałki na klawiaturze (wzorzec ARIA tabs)
+    $("dots").addEventListener("click", (e) => { const d = e.target.closest("[data-dot]"); if (d) go(+d.dataset.dot); });
+    $("dots").addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      e.preventDefault();
+      go(current + (e.key === "ArrowRight" ? 1 : -1), e.key === "ArrowRight" ? 1 : -1);
+      $("dots").children[current].focus();
+    });
+    // Przesuwanie palcem / myszką
+    let startX = null;
+    $("stage").addEventListener("pointerdown", (e) => { startX = e.clientX; });
+    addEventListener("pointerup", (e) => {
+      if (startX === null) return;
+      const dx = e.clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 50) go(current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    });
+    // Pauza, gdy użytkownik jest nad karuzelą/opisem lub ma w niej fokus
+    for (const id of ["stage-wrap", "info"]) {
+      $(id).addEventListener("pointerenter", () => setPaused(true));
+      $(id).addEventListener("pointerleave", () => setPaused(false));
+      $(id).addEventListener("focusin", () => setPaused(true));
+      $(id).addEventListener("focusout", () => setPaused(false));
+    }
+    reduceMotion.addEventListener("change", restartAutoplay);
+    // Menu plików
+    function closeMenus(except) {
+      document.querySelectorAll(".files.open").forEach((f) => {
+        if (f === except) return;
+        f.classList.remove("open");
+        f.querySelector("[data-files]").setAttribute("aria-expanded", "false");
+      });
+    }
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-files]");
+      closeMenus(btn && btn.parentElement);
+      if (btn) {
+        const open = btn.parentElement.classList.toggle("open");
+        btn.setAttribute("aria-expanded", open);
+      }
+    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenus(); });
+    addEventListener("resize", () => apps.length && placeSlots());
+
+    // Odblask i jasna krawędź szkła podążają za kursorem
+    document.addEventListener("pointermove", (e) => {
+      const el = e.target.closest(".glass");
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      el.style.setProperty("--my", `${e.clientY - r.top}px`);
+    }, { passive: true });
+
+    /* ================= Wygląd: automatyczny / jasny / ciemny ================= */
+    const THEME_ICONS = {
+      auto:  `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10" cy="10" r="7.25"/><path d="M10 2.75a7.25 7.25 0 0 1 0 14.5z" fill="currentColor"/></svg>`,
+      light: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg>`,
+      dark:  `<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M16.6 12.6A7 7 0 0 1 7.4 3.4a.6.6 0 0 0-.8-.7 7.8 7.8 0 1 0 10.7 10.7.6.6 0 0 0-.7-.8z"/></svg>`,
+    };
+    const systemDark = matchMedia("(prefers-color-scheme: dark)");
+    const themeLabels = { auto: "Automatyczny", light: "Jasny", dark: "Ciemny" };
+    const THEMES = ["auto", "light", "dark"];
+
+    function getTheme() { try { return localStorage.getItem("mango-theme") || "auto"; } catch { return "auto"; } }
+    const isDark = (t) => t === "dark" || (t === "auto" && systemDark.matches);
+
+    // Suwak + zaznaczenie (od razu, zanim zmieni się motyw)
+    function markTheme(t, animate) {
+      $("seg").style.setProperty("--seg-i", THEMES.indexOf(t));
+      document.querySelectorAll("[data-theme-set]").forEach((b) => {
+        const on = b.dataset.themeSet === t;
+        b.setAttribute("aria-checked", on);
+        b.tabIndex = on ? 0 : -1;
+      });
+      if (animate) {
+        const th = $("seg-thumb");
+        th.classList.remove("squish"); void th.offsetWidth; th.classList.add("squish");
+      }
+    }
+    function applyTheme(t) {
+      if (t === "auto") delete document.documentElement.dataset.theme;
+      else document.documentElement.dataset.theme = t;
+      try { t === "auto" ? localStorage.removeItem("mango-theme") : localStorage.setItem("mango-theme", t); } catch {}
+      document.querySelector('meta[name="theme-color"]').content = isDark(t) ? "#000000" : "#f5f5f7";
+      $("theme-btn").innerHTML = THEME_ICONS[t];
+      $("theme-btn").setAttribute("aria-label", `Wygląd: ${themeLabels[t]}`);
+      markTheme(t);
+    }
+
+    // Zmiana motywu: suwak przepływa, potem nowy wygląd rozlewa się kołem od klikniętej opcji
+    let themeTimer = null;
+    function setTheme(t, origin) {
+      const prev = getTheme();
+      clearTimeout(themeTimer);
+      markTheme(t, true);
+      if (t === prev) return;
+      const btn = $("theme-btn");
+      btn.classList.remove("spin"); void btn.offsetWidth; btn.classList.add("spin");
+      const canReveal = document.startViewTransition && !reduceMotion.matches && isDark(t) !== isDark(prev);
+      if (!canReveal) { applyTheme(t); return; }
+      themeTimer = setTimeout(() => {
+        const r = origin.getBoundingClientRect();
+        const x = r.left + r.width / 2, y = r.top + r.height / 2;
+        const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        const root = document.documentElement;
+        root.classList.add("vt-theme");
+        const vt = document.startViewTransition(() => applyTheme(t));
+        vt.ready.then(() => root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 750, easing: "cubic-bezier(.32, .72, 0, 1)", pseudoElement: "::view-transition-new(root)" }
+        )).catch(() => {});
+        vt.finished.finally(() => root.classList.remove("vt-theme"));
+      }, 260);   // najpierw niech suwak dojedzie
+    }
+
+    document.querySelectorAll("[data-ico]").forEach((el) => { el.innerHTML = THEME_ICONS[el.dataset.ico]; });
+    systemDark.addEventListener("change", () => applyTheme(getTheme()));
+
+    function setThemeMenu(open) {
+      document.querySelector(".theme").classList.toggle("open", open);
+      $("theme-btn").setAttribute("aria-expanded", open);
+      if (open) document.querySelector('.seg [aria-checked="true"]').focus({ preventScroll: true });
+    }
+    $("theme-btn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      setThemeMenu(!document.querySelector(".theme").classList.contains("open"));
+    });
+    $("seg").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-theme-set]");
+      if (b) setTheme(b.dataset.themeSet, b);
+    });
+    // Wzorzec ARIA radiogroup: strzałki zmieniają wybór
+    $("seg").addEventListener("keydown", (e) => {
+      const dir = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+      if (!dir) return;
+      e.preventDefault();
+      const now = document.querySelector('.seg [aria-checked="true"]').dataset.themeSet;
+      const t = THEMES[(THEMES.indexOf(now) + dir + 3) % 3];
+      const b = document.querySelector(`[data-theme-set="${t}"]`);
+      setTheme(t, b);
+      b.focus();
+    });
+    document.addEventListener("click", (e) => { if (!e.target.closest(".theme")) setThemeMenu(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && document.querySelector(".theme.open")) { setThemeMenu(false); $("theme-btn").focus(); } });
+    applyTheme(getTheme());
+
+    async function load() {
+      const cache = readCache();
+      if (cache) render(cache.data, cache.time);
+      if (cache && Date.now() - cache.time < CACHE_TTL) return;
+      try {
+        const data = await fetchProjects();
+        writeCache(data);
+        render(data);
+      } catch (err) {
+        if (!cache) {
+          $("info").innerHTML = `<div class="info-inner"><div class="error glass">Nie udało się pobrać aplikacji (${esc(err.message)}). Spróbuj odświeżyć stronę za chwilę.</div></div>`;
+          Glass.apply();
+        }
+      }
+    }
+
+    Glass.apply();
+    load();
+    setInterval(load, CACHE_TTL); // odświeżaj także przy otwartej karcie
   </script>
 </body>
 </html>
